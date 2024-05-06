@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,24 +16,49 @@ export default function InputDate() {
     const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'))
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
 
-    const [startDate, setStartDate] = useState(dayjs(productStore.selectedStartDate));
-    const [endDate, setEndDate] = useState(dayjs(productStore.selectedEndDate));
+    // const [startDate, setStartDate] = useState(dayjs(productStore.selectedStartDate));
+    // const [endDate, setEndDate] = useState(dayjs(productStore.selectedEndDate));
+
+    // const handleStartDateChange = (value: dayjs.Dayjs | null) => {
+    //     if (value !== null) {
+    //         const startDateDayjs = dayjs(value);
+    //         setStartDate(startDateDayjs);
+    //         productStore.setSelectedDates(startDateDayjs.format('YYYY-MM-DD'), dayjs(endDate).format('YYYY-MM-DD'));
+    //     }
+    // };
+
+    // const handleEndDateChange = (value: dayjs.Dayjs | null) => {
+    //     if (value !== null) {
+    //         const endDateDayjs = dayjs(value);
+    //         setEndDate(endDateDayjs);
+    //         productStore.setSelectedDates(dayjs(startDate).format('YYYY-MM-DD'), endDateDayjs.format('YYYY-MM-DD'));
+    //     }
+    // };
+
+    // Получаем начальные даты из хранилища
+    const initialStartDate = dayjs(productStore.selectedStartDate);
+    const initialEndDate = dayjs(productStore.selectedEndDate);
+
+    // Устанавливаем начальную дату как 12 дней раньше текущей и конечную дату как текущую
+    const [startDate, setStartDate] = useState(initialStartDate);
+    const [endDate, setEndDate] = useState(initialEndDate);
 
     const handleStartDateChange = (value: dayjs.Dayjs | null) => {
         if (value !== null) {
             const startDateDayjs = dayjs(value);
             setStartDate(startDateDayjs);
-            productStore.setSelectedDates(startDateDayjs.format('YYYY-MM-DD'), dayjs(endDate).format('YYYY-MM-DD'));
-        }
-    };
+            productStore.setSelectedDates(startDateDayjs.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+        };
+    }
+
 
     const handleEndDateChange = (value: dayjs.Dayjs | null) => {
         if (value !== null) {
             const endDateDayjs = dayjs(value);
             setEndDate(endDateDayjs);
-            productStore.setSelectedDates(dayjs(startDate).format('YYYY-MM-DD'), endDateDayjs.format('YYYY-MM-DD'));
-        }
-    };
+            productStore.setSelectedDates(startDate.format('YYYY-MM-DD'), endDateDayjs.format('YYYY-MM-DD'));
+        };
+    }
 
 
     return (
@@ -42,46 +67,57 @@ export default function InputDate() {
                 display: 'flex',
                 color: 'white',
                 // alignItems: 'center',
-                width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
-                justifyContent: 'end'
+                  width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
+                justifyContent: 'end',
+                gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : isSmallScreen ? '4ch': '4ch',
             }}>
-                <DemoContainer
+                {/* <DemoContainer
                     sx={{
-                        width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '100%' : isExtraSmallScreen ? '32ch' : isSmallScreen ? '32ch' : '52ch',
+                        width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '100%' : isExtraSmallScreen ? '32ch' : isSmallScreen ? '32ch' : '58ch',
                     }}
                     components={[
                         'DatePicker',
                     ]}
-                >
-                    <DemoItem label="Start Date">
+                > */}
+                    <DemoItem label="Start Date"
+                    sx={{
+                        width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : isExtraSmallScreen ? '27ch' : isSmallScreen ? '27ch' : '27ch',
+                    }}
+                    >
                         <DatePicker
                             sx={{
                                 '& input': {
                                     color: 'white', // Цвет текста в поле ввода
                                 },
-                                '& .MuiFormControl-root': {
-                                    // width: '100%', // Ширина поля ввода
-                                },
+                                // '& .MuiFormControl-root': {
+                                //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
+                                // },
+                            // width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
                             }}
                             value={startDate}
                             onChange={handleStartDateChange}
                         />
                     </DemoItem>
-                    <DemoItem label="End Date">
+                    <DemoItem label="End Date"
+                    sx={{
+                        width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : isExtraSmallScreen ? '27ch' : isSmallScreen ? '27ch' : '27ch',
+                    }}
+                    >
                         <DatePicker
                             sx={{
                                 '& input': {
                                     color: 'white',
                                 },
                                 '& .MuiFormControl-root': {
-                                    // width: '100%',
-                                },
+                                    width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '27',
+                                }
                             }}
+                        disableFuture={true}
                             value={endDate}
                             onChange={handleEndDateChange}
                         />
                     </DemoItem>
-                </DemoContainer>
+                {/* </DemoContainer> */}
             </Box>
         </LocalizationProvider>
     );
