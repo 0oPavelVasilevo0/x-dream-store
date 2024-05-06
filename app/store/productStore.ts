@@ -5,11 +5,8 @@ class ProductStore {
     selectedProduct: any = null;
     selectedBuyInfoProduct: any[] = [];
 
-    selectedStartDate: string = '2024-04-01';
-    selectedEndDate: string = '2024-04-17';
-
-    // selectedStartDate: string = '';
-    // selectedEndDate: string = '';
+    selectedStartDate: string = '';
+    selectedEndDate: string = '';
 
     constructor() {
         makeObservable(this, {
@@ -24,6 +21,11 @@ class ProductStore {
             saveToLocalStorage: action,
             loadFromLocalStorage: action,
         });
+
+        const currentDate = dayjs();
+        this.selectedStartDate = currentDate.subtract(30, 'day').format('YYYY-MM-DD');
+        this.selectedEndDate = currentDate.format('YYYY-MM-DD');
+
         this.loadFromLocalStorage(); // Load from localStorage when the store initializes
         
     }
@@ -42,13 +44,6 @@ class ProductStore {
         this.saveToLocalStorage(); // Save to localStorage when a product is removed
     }
 
-    // Установка начальных дат на основе текущей даты
-    setInitialDates() {
-        const currentDate = dayjs();
-        this.selectedStartDate = currentDate.format('YYYY-MM-DD');
-        this.selectedEndDate = currentDate.subtract(12, 'day').format('YYYY-MM-DD');
-    }
-
     setSelectedDates(startDate: string, endDate: string) {
         this.selectedStartDate = startDate;
         this.selectedEndDate = endDate;
@@ -65,14 +60,6 @@ class ProductStore {
         if (typeof window !== 'undefined') {
             const selectedProducts = JSON.parse(localStorage.getItem('selectedProducts') || '[]');
             this.selectedBuyInfoProduct = selectedProducts;
-            this.selectedStartDate = localStorage.getItem('selectedStartDate') || '2024-04-01';
-            this.selectedEndDate = localStorage.getItem('selectedEndDate') || '2024-04-17';
-            // this.selectedStartDate = localStorage.getItem('selectedStartDate') || '';
-            // this.selectedEndDate = localStorage.getItem('selectedEndDate') || '';
-        }
-        // Если начальные даты не установлены в localStorage, установите их на основе текущей даты
-        if (!this.selectedStartDate || !this.selectedEndDate) {
-            this.setInitialDates();
         }
     }
 
