@@ -5,6 +5,7 @@ import React, { forwardRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { customTheme } from '@/app/theme/theme'
 import productStore from '@/app/store/productStore'
+import usePriceData from '@/app/hooks/usePriceData'
 
 interface CustomProps {
     onChange: (event: { target: { name: string; value: string } }) => void;
@@ -59,17 +60,42 @@ export default observer(function Orders() {
         productStore.removeSelectedBuyInfoProduct(index);
     };
 
+    //расчет прайса
+    const complexPriceData = usePriceData()
+    const codeUSD = complexPriceData && complexPriceData.bpi.USD.code
+
+    const getPrice = (url: string) => {
+        if (url) {
+            const parts: string[] = url.split('/');
+            const numberIndex = parts.findIndex((part: string) => part === 'image') + 1// Находим индекс элемента 'image' и прибавляем 1, чтобы получить следующий элемент
+            const number = parts[numberIndex];
+            if (number) {
+                // Выполняем расчет
+                const bitcoinPrice = complexPriceData && complexPriceData.bpi.USD.rate_float; // доступ к данным о цене биткоина
+                const result = bitcoinPrice && (bitcoinPrice / parseInt(number)) / 10; // Парсим цифры в целое число и выполняем расчет
+                return `price: ${result && result.toFixed(1)} ${codeUSD}`; // Возвращаем результат с округлением до ? знаков после запятой
+            } else {
+                return `price: 0.5 ${codeUSD}`; // Возвращаем "что-то", если не удается извлечь число из URL
+            }
+        }
+    };
+
     return (
         <Box sx={{
-            background: '#D9D9D9',
-            borderRadius: 1,
+
+            justifyContent: 'center',
+            display: 'grid',
+            gap: '6px',
         }}>
             <Typography>Your order</Typography>
             {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (
                 <Box key={index} sx={{
                     display: 'flex',
+                    maxWidth: '100ch',
+                    background: '#D9D9D9',
+                    borderRadius: 1,
                     flexDirection: 'row',
-                    gap: '6px',
+
                     justifyContent: 'space-between',
                     p: 2
                 }}>
@@ -80,8 +106,7 @@ export default observer(function Orders() {
                         alt={product.title}
                     />
                     <Typography width={'100%'} fontSize={16}>{product.title}</Typography>
-                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>{'amount'}</Typography>
-                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>{'total'}</Typography>
+                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>{product.url && getPrice(product.url)}</Typography>
 
                     <Button variant='outlined' onClick={() => handleDelete(index)}>Delete</Button>
                 </Box>
