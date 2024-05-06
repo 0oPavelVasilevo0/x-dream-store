@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Products } from '../(pages)/api/products/productsData';
+import { Products } from '../(pages)/api/productsRoute/productsData';
 
 interface Product {
     products: any[];
