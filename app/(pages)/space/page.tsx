@@ -66,6 +66,7 @@ export default observer(function Space() {
 
     //расчет прайса
     const complexPriceData = usePriceData()
+    const codeUSD = complexPriceData && complexPriceData.bpi.USD.code
 
     const getPrice = (url: string) => {
         if (url) {
@@ -76,9 +77,9 @@ export default observer(function Space() {
                 // Выполняем расчет
                 const bitcoinPrice = complexPriceData && complexPriceData.bpi.USD.rate_float; // доступ к данным о цене биткоина
                 const result = bitcoinPrice && (bitcoinPrice / parseInt(number)) / 10; // Парсим цифры в целое число и выполняем расчет
-                return `price: ${result && result.toFixed(1)}`; // Возвращаем результат с округлением до ? знаков после запятой
+                return `price: ${result && result.toFixed(1)} ${codeUSD}`; // Возвращаем результат с округлением до ? знаков после запятой
             } else {
-                return 'price: 0.5'; // Возвращаем "что-то", если не удается извлечь число из URL
+                return `price: 0.5 ${codeUSD}`; // Возвращаем "что-то", если не удается извлечь число из URL
             }
         }
     };
@@ -147,7 +148,7 @@ export default observer(function Space() {
                                     {product.date}
                                 </Typography>
                                 <Typography fontSize={12}>
-                                    {product.url && getPrice(product.url)} {complexPriceData && complexPriceData.bpi.USD.code}
+                                    {product.url && getPrice(product.url)}
                                 </Typography>
                             </CardContent>
                             <CardActions>
