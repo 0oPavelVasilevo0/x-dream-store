@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import dynamic from 'next/dynamic'
 import { Box } from "@mui/material";
+import AuthProvider from "@/context/AuthProvider";
 
 const _NavBar = dynamic(() => import('./components/navbar/NavBar'), { ssr: false })
 
@@ -20,16 +21,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <_NavBar />
-        <Box
-          sx={{
-            p: '14ch 0ch',
-          }}
-        >
-        {children}
-        </Box>
+      <AuthProvider>
+        <body>
+          <_NavBar />
+          <Box
+            sx={{
+              p: '14ch 0ch',
+            }}
+          >
+            {children}
+          </Box>
         </body>
+      </AuthProvider>
     </html>
   );
 }

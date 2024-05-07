@@ -1,12 +1,12 @@
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
-// import prisma from "@/lib/prisma";
-// import bcrypt from 'bcryptjs';
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "@/lib/prisma";
+import bcrypt from 'bcryptjs';
 
 export const options = {
-    // adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma),
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -27,41 +27,40 @@ export const options = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
-
-                const user = {
-                    id: "39",
-                    name: "Pipin",
-                    email: "pipin@examle.com",
-                    password: "12345"
-                }
-
                 const { email, password } = credentials;
+                // const user = {
+                //     id: "39",
+                //     name: "Pipin",
+                //     email: "pipin@examle.com",
+                //     password: "12345"
+                // }
 
-                // const user = await prisma.user.findUnique({
-                //     where: {
-                //         email: email,
-                //     },
-                // });
+                //chek in db
+                const user = await prisma.user.findUnique({
 
-                if (!user) {
-                  return null;
-                }
-                if (email === user.email && password === user?.password) {
-                  return user;
-                } else {
-                  return null;
-                }
+                    where: {
+                        email: email,
+                    },
+                });
 
-                // const hashedPassword = user.password;
+                const hashedPassword = user.password;
+                //         // Compare the plain-text password with the hashed password
+                const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
-        //         // Compare the plain-text password with the hashed password
-        //         const passwordMatch = await bcrypt.compare(password, hashedPassword);
+                        if (passwordMatch) {
+                            return user;
+                        } else {
+                            return null;
+                        }
 
-        //         if (passwordMatch) {
-        //             return user;
-        //         } else {
-        //             return null;
-        //         }
+                // if (!user) {
+                //   return null;
+                // }
+                // if (email === user.email && password === user?.password) {
+                //   return user;
+                // } else {
+                //   return null;
+                // }
             },
         }),
     ],
