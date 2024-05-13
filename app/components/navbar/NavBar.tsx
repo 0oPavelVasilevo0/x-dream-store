@@ -5,13 +5,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { AppBar, Badge, Box, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import Button from '@mui/material/Button';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link, { NextLinkComposed } from '../link/Link';
 import { customTheme } from '@/app/theme/theme';
 import productStore from '@/app/store/productStore';
 import { observer } from 'mobx-react';
+import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 // import Link from 'next/link';
 
 const pages = [
@@ -62,7 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 //export default observer(function Info() {
 
-export default observer( function NavBar() {
+export default observer(function NavBar() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -87,6 +89,23 @@ export default observer( function NavBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const pathname = usePathname()
+    const isActive = (path: string) => path === pathname;
+
+    const { data: session, status } = useSession()
+    const router = useRouter();
+
+    const handleLogin = () => {
+       router.push('/login');
+        //router.push('/api/auth/signin');// if you use server-side login
+    };
+    // variant={`${isActive(page.path) ? 'outlined' : 'text'}`}
+
+    const handleLogout = () => {
+        signOut();
+    };
+
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -106,6 +125,7 @@ export default observer( function NavBar() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleLogout}>Sign out</MenuItem>
         </Menu>
     );
 
@@ -129,51 +149,54 @@ export default observer( function NavBar() {
             {pages.map((page) => (
                 <MenuItem key={page.id} onClick={handleMobileMenuClose}>
                     <Link key={page.id} href={page.path} onClick={handleMobileMenuClose} >
-
                         <Typography textAlign="center">{page.name}</Typography>
-
                     </Link>
                 </MenuItem>
             ))}
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent=
-                        {productStore.selectedProductsCount} 
-                        color="error">
-                        <ShoppingCartIcon />
-                    </Badge>
-                </IconButton>
-                <p>Orders</p>
-            </MenuItem>
-            {/* <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem> */}
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
+            {status !== "authenticated" ?
+                (
+                    <MenuItem onClick={handleLogin}>
+                        Sign in
+                    </MenuItem>
+                )
+                :
+                (
+                    <>
+                        <MenuItem>
+                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                <Badge badgeContent=
+                                    {productStore.selectedProductsCount}
+                                    color="error">
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </IconButton>
+                            <p>Orders</p>
+                        </MenuItem>
+                        <MenuItem onClick={handleProfileMenuOpen}>
+                            <IconButton
+                                size="small"
+                                aria-label="account of current user"
+                                aria-controls="primary-search-account-menu"
+                                aria-haspopup="true"
+                                color="inherit"
+                            >
+                                <Avatar
+                                 alt="Profile"
+                                  src={session.user?.image || ''}
+                                   />
+                            </IconButton>
+                            <p>Profile</p>
+                        </MenuItem>
+                        <MenuItem
+                            onClick={handleLogout}>
+                            Sign out
+                        </MenuItem>
+                    </>
+                )
+            }
         </Menu>
     );
 
-    const pathname = usePathname()
-    const isActive = (path: string) => path === pathname;
 
     const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
     const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));
@@ -181,7 +204,7 @@ export default observer( function NavBar() {
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
 
     return (
-        
+
         <Box sx={{ flexGrow: 1, }}>
 
             <AppBar sx={{
@@ -189,23 +212,10 @@ export default observer( function NavBar() {
                 alignItems: isXUltraSmallScreen ? undefined : 'center'
             }}
                 position="fixed">
-                {/* <Box sx={{
-                    width: isXUltraSmallScreen ? undefined : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
-                  
-                }}> */}
                 <Toolbar sx={{
                     // padding: '0px 40px',
                     width: isXUltraSmallScreen ? undefined : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
                 }}>
-                    {/* <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton> */}
                     <Link
                         // activeClassName={isActive("/") ? "active": undefined}
                         activeClassName="false"
@@ -218,7 +228,6 @@ export default observer( function NavBar() {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-
                             Dream Store
                         </Typography>
                     </Link>
@@ -253,33 +262,42 @@ export default observer( function NavBar() {
                                 </Typography>
                             </Button>
                         ))}
-                        <IconButton component={Link} href={'/orders'} size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent=
-                                {productStore.selectedProductsCount}
-                                color="error">
-                                <ShoppingCartIcon />
-                            </Badge>
-                        </IconButton>
-                        {/* <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={17} color="error">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton> */}
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        {status !== "authenticated" ?
+                            (
+                                <Button sx={{color: 'white'}} onClick={handleLogin}>
+                                    Sign in
+                                </Button>
+                            )
+                            :
+                            (
+                                <>
+                                    <IconButton
+                                        component={Link}
+                                        href={'/orders'}
+                                        size="large"
+                                        aria-label="show 4 new mails"
+                                        color="inherit"
+                                    >
+                                        <Badge
+                                            badgeContent={productStore.selectedProductsCount}
+                                            color="error">
+                                            <ShoppingCartIcon />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton
+                                        size="small"
+                                        edge="end"
+                                        aria-label="account of current user"
+                                        aria-controls={menuId}
+                                        aria-haspopup="true"
+                                        onClick={handleProfileMenuOpen}
+                                        color="inherit"
+                                    >
+                                        <Avatar alt="Profile" src={session.user?.image || ''} />
+                                    </IconButton>
+                                </>
+                            )
+                        }
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton

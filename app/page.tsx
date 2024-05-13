@@ -1,12 +1,17 @@
 'use client'
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, CardMedia, useMediaQuery } from "@mui/material";
 import { customTheme } from "./theme/theme";
+import { useSession } from "next-auth/react";
+import { Image } from "@mui/icons-material";
 
 export default function Home() {
   const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
   const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));
   const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
   const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
+
+  const { data: session, status } = useSession()
+
   return (
     <main>
       <Box
@@ -20,8 +25,28 @@ export default function Home() {
         }}
       >
       <div style={{ marginTop: '60px' }}> 
-      home
+          {(status !== "authenticated") ? ('home') : (
+          <CardMedia
+            component="img"
+            height="50"
+            // width="40"
+            // image={session && session.user?.image}
+              src={session.user?.image || ''}
+            alt={'1'}
+            sx={{ borderRadius: '4px 4px 0 0', width: '40px'}}
+          />)}
+          {/* <img src={ session && session.user?.image} alt="profile" width={'40px'} height={'80px'}/> */}
       </div>
+        <div style={{ marginTop: '60px' }}>
+          {(status !== "authenticated") ? ('home') : (session.user?.name)}
+          {/* <CardMedia
+            component="img"
+            height="250"
+            image={session.user.image}
+            alt={'1'}
+            sx={{ borderRadius: '4px 4px 0 0' }}
+          /> */}
+        </div>
       </Box>
     </main>
   );
