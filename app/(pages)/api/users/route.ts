@@ -1,10 +1,12 @@
 import { createUserWithAccount, getUserByEmail } from '@/app/utils/user';  // Import user-related utilities
 import bcrypt from 'bcryptjs'; // Import bcryptjs instead of bcrypt
-import { NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req, res) => {
+export const POST = async (req: NextRequest, res: NextResponse) => {                  //res?
     try {
         const { name, email, password } = await req.json();
+        // const { name, email, password } = req.body; 
 
         // Check if the email already exists in the database
         const existingUser = await getUserByEmail(email);

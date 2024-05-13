@@ -1,7 +1,13 @@
 import prisma from "@/lib/prisma";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function createUserWithAccount({ name, email, password }) {
+interface CreateUserParams {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export async function createUserWithAccount({ name, email, password }: CreateUserParams) {
     try {
         const newUser = await prisma.user.create({
             data: {
@@ -20,6 +26,7 @@ export async function createUserWithAccount({ name, email, password }) {
                 accounts: true,
             }
         })
+        return newUser; // Возвращаем созданного пользователя
 
     } catch (error) {
         console.error('Error creating user with account: ', error);
@@ -27,7 +34,7 @@ export async function createUserWithAccount({ name, email, password }) {
     }
 }
 
-export async function getUserByEmail(email) {
+export async function getUserByEmail(email: string) {
     try {
         const user = await prisma.user.findUnique({
             where: {
