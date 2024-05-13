@@ -25,7 +25,7 @@ export async function Products(startDate: string, endDate: string): Promise<any>
 
         // const response = await axios.get(apiKey, config);
         // const url = `${apiKey}&count=${productStore.displayCount}`;
-        const url = `${apiKey}`;
+        const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
         const response = await axios.get(url, config);
         return response.data;
     } catch (error) {
