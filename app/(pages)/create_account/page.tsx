@@ -53,7 +53,7 @@ export default function CreateAccount() {
             }}>
                 <Box sx={{ mt: 1 }}>
                     {(error === "") ? (
-                        <Typography >
+                        <Typography fontSize={24} >
                             Create Acount
                         </Typography>
                     ) : (
@@ -61,6 +61,7 @@ export default function CreateAccount() {
                             {error}
                         </Typography>)}
                 </Box>
+                <Divider />
                 <form onSubmit={handleSubmit}>
                     <TextField
                         fullWidth

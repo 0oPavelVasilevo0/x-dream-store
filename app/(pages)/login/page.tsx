@@ -1,19 +1,13 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Box, Button, Divider, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import Link from "@/app/components/link/Link";
-import SvgGoogle from "@/app/components/svg/svgGoogle";
-import SvgGithub from "@/app/components/svg/SvgGithub";
-import { customTheme } from "@/app/theme/theme";
+import SvgGoogle from "@/app/components/svg/google/SvgGoogle";
+import SvgGithub from "@/app/components/svg/github/SvgGithub";
 
 export default function Login() {
-    const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
-    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
-    const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'))
-    const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
-
     const { status } = useSession();
     const router = useRouter();
     // const pathname = usePathname();
@@ -57,14 +51,56 @@ export default function Login() {
             }}>
                 <Box sx={{ mt: 1 }}>
                     {(error === "") ? (
-                        <Typography >
-                            Log In
+                        <Typography fontSize={24}>
+                            Log in to your account
                         </Typography>
                     ) : (
                         <Typography sx={{ color: 'red' }}>
                             {error}
                         </Typography>)}
                 </Box>
+                <Divider />
+                <Typography >
+                    Don&apos;t have an account?{" "}
+                    <Link
+                        href="/create_account"
+                        underline="none"
+                        activeClassName="false"
+                    >
+                        Sign up
+                    </Link>
+                </Typography>
+                <Button
+                    fullWidth
+                    onClick={() => signIn("google")}
+                    variant="contained"
+                    sx={{
+                        background: '#222222',
+                        mt: 3
+                    }}
+                    startIcon={<SvgGoogle />}
+                >
+                    <Typography ml={4} textTransform={'none'}>
+                        Sign in with Google
+                    </Typography>
+                </Button>
+                <Button
+                    fullWidth
+                    onClick={() => signIn("github")}
+                    variant="contained"
+                    sx={{
+                        background: '#222222',
+                        mt: 1
+                    }}
+                    startIcon={<SvgGithub />}
+                >
+                    <Typography ml={4} textTransform={'none'}>
+                        Sign in with GitHub
+                    </Typography>
+                </Button>
+                <Divider sx={{ mt: 3 }}>
+                    or
+                </Divider>
                 <form onSubmit={handleSignIn}>
                     <TextField
                         fullWidth
@@ -103,7 +139,7 @@ export default function Login() {
                     >
                         Log In
                     </Button>
-                    <Typography >
+                    {/* <Typography >
                         Don&apos;t have an account?{" "}
                         <Link
                             href="/create_account"
@@ -112,39 +148,8 @@ export default function Login() {
                         >
                             Sign up
                         </Link>
-                    </Typography>
+                    </Typography> */}
                 </form>
-                <Divider sx={{ mt: 3 }}>
-                    or
-                </Divider>
-                <Button
-                    fullWidth
-                    onClick={() => signIn("google")}
-                    variant="contained"
-                    sx={{
-                        background: '#222222',
-                        mt: 3
-                    }}
-                    startIcon={<SvgGoogle />}
-                >
-                    <Typography ml={4}>
-                        Sign in with Google
-                    </Typography>
-                </Button>
-                <Button
-                    fullWidth
-                    onClick={() => signIn("github")}
-                    variant="contained"
-                    sx={{
-                        background: '#222222',
-                        mt: 1
-                    }}
-                    startIcon={<SvgGithub />}
-                >
-                    <Typography ml={4}>
-                        Sign in with Github
-                    </Typography>
-                </Button>
             </Box>
         </Box>
     );
