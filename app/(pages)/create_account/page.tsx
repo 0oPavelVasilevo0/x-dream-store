@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 export default function CreateAccount() {
     const [name, setName] = useState('');
@@ -11,7 +11,7 @@ export default function CreateAccount() {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await axios.post('/api/users', {
@@ -19,9 +19,9 @@ export default function CreateAccount() {
                 email,
                 password,
             });
-            router.push('/');
-        } catch (error) {
-            if (error.response && error.response.status === 400) {
+            router.push('/login');
+        } catch (error: any) {
+            if (error.response.status === 400) {
                 // Handle 400 Bad Request (email already exists)
                 setError("Email already exist");
             } else {
@@ -34,47 +34,81 @@ export default function CreateAccount() {
 
 
     return (
-        <Box sx={{display: 'flex', justifyContent: 'center'}}>  
-            <Box sx={{ color: 'white', width: '20ch' }}>
-                <Typography >Create Account</Typography>
-                <hr />
-                <Typography sx={{ display: error === "" ? 'none' : 'block', color: error === "" ? '' : 'red' }}>{error}</Typography>
+        <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            height: '100vh',
+            minHeight: '460px'
+        }}
+        >
+            <Box sx={{
+                width: '36ch',
+                alignItems: 'center',
+                textAlign: 'center',
+                background: '#D9D9D9',
+                p: 1,
+                borderRadius: 1
+            }}>
+                <Box sx={{ mt: 1 }}>
+                    {(error === "") ? (
+                        <Typography >
+                            Create Acount
+                        </Typography>
+                    ) : (
+                        <Typography sx={{ color: 'red' }}>
+                            {error}
+                        </Typography>)}
+                </Box>
                 <form onSubmit={handleSubmit}>
-                    <Box >
-                        <label htmlFor="name" >Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                           
-                        />
-                    </Box>
-                    <Box>
-                        <label htmlFor="email" >Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            
-                        />
-                    </Box>
-                    <Box>
-                        <label htmlFor="password" >Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                         
-                        />
-                    </Box>
-                    <button>Create User</button>
-
+                    <TextField
+                        fullWidth
+                        size="small"
+                        id="name"
+                        label="Name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        autoComplete="off"
+                        sx={{ mt: 3 }}
+                    />
+                    <TextField
+                        fullWidth
+                        size="small"
+                        id="email"
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        autoComplete="off"
+                        sx={{ mt: 3 }}
+                    />
+                    <TextField
+                        fullWidth
+                        size="small"
+                        id="password"
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        autoComplete="off"
+                        sx={{ mt: 3 }}
+                    />
+                    <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                            background: '#222222',
+                            mt: 3
+                        }}
+                    >
+                        Create User
+                    </Button>
                 </form>
             </Box>
         </Box>
