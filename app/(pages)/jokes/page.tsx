@@ -11,7 +11,11 @@ export default function Jokes() {
 
   const complexData = useJokesData()
   if (complexData === null) {
-    return <div style={{ color: 'white', textAlign: 'center' }}><CircularProgress /></div>;
+    return <Box sx={{
+      display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
+    }}>
+      <CircularProgress />
+    </Box >
   }
   return (
     <Box sx={{
@@ -19,6 +23,8 @@ export default function Jokes() {
       gridTemplateColumns: isXUltraSmallScreen ? undefined : isUltraSmallScreen ? '24ch 24ch' : isExtraSmallScreen ? '27ch 27ch' : isSmallScreen ? '27ch 27ch 27ch' : '27ch 27ch 27ch 27ch',
       gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : '4ch',
       justifyContent: isSmallScreen ? 'center' : 'center',
+      mb: 2,
+      mt: 12
     }}
     >
       {complexData.jokes.map((jokes, index) => (

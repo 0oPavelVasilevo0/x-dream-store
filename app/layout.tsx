@@ -25,9 +25,9 @@ export default function RootLayout({
         <body>
           <_NavBar />
           <Box
-            sx={{
-              p: '14ch 0ch',
-            }}
+            // sx={{
+            //   p: '14ch 0ch',
+            // }}
           >
             {children}
           </Box>

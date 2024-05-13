@@ -82,10 +82,11 @@ export default observer(function Orders() {
 
     return (
         <Box sx={{
-
             justifyContent: 'center',
             display: 'grid',
             gap: '6px',
+            mb: 2,
+            mt: 12
         }}>
             <Typography>Your order</Typography>
             {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (

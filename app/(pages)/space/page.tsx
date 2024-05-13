@@ -87,7 +87,7 @@ export default observer(function Space() {
 
     if (complexData === null) {
         return <Box sx={{
-            display: 'flex', justifyContent: 'center'
+            display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
         }}>
             <CircularProgress />
         </Box >
@@ -98,7 +98,8 @@ export default observer(function Space() {
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                mb: 2
+                mb: 2,
+                mt: 12
             }}>
                 <InputDate />
             </Box>
