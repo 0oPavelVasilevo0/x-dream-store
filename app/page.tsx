@@ -2,7 +2,6 @@
 import { Box, CardMedia, useMediaQuery } from "@mui/material";
 import { customTheme } from "./theme/theme";
 import { useSession } from "next-auth/react";
-import { Image } from "@mui/icons-material";
 
 export default function Home() {
   const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));

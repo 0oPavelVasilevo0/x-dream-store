@@ -1,6 +1,6 @@
 'use client'
 import { IMaskInput } from 'react-imask'
-import { Box, Button, Card, CardContent, CardMedia, FormControl, InputLabel, OutlinedInput, Typography, useMediaQuery, } from '@mui/material'
+import { Box, Button, CardMedia, FormControl, InputLabel, OutlinedInput, Typography, useMediaQuery, } from '@mui/material'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { customTheme } from '@/app/theme/theme'
