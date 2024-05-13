@@ -139,16 +139,6 @@ export default function Login() {
                     >
                         Log In
                     </Button>
-                    {/* <Typography >
-                        Don&apos;t have an account?{" "}
-                        <Link
-                            href="/create_account"
-                            underline="none"
-                            activeClassName="false"
-                        >
-                            Sign up
-                        </Link>
-                    </Typography> */}
                 </form>
             </Box>
         </Box>

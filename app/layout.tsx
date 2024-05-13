@@ -24,11 +24,7 @@ export default function RootLayout({
       <AuthProvider>
         <body>
           <_NavBar />
-          <Box
-            // sx={{
-            //   p: '14ch 0ch',
-            // }}
-          >
+          <Box>
             {children}
           </Box>
         </body>

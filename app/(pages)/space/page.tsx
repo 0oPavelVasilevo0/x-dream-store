@@ -1,5 +1,5 @@
 'use client'
-import InputDate from '@/app/components/ inputDate/InputDate'
+import InputDate from '@/app/components/inputDate/InputDate'
 import usePriceData from '@/app/hooks/usePriceData'
 import useProductsData from '@/app/hooks/useProductsData'
 import productStore from '@/app/store/productStore'
@@ -62,7 +62,7 @@ export default observer(function Space() {
     };
 
     //проверка нахождения обьекта в localstorage
-    const cheсkLocalProduct = (product : any[]) => productStore.selectedBuyInfoProduct.some(item => JSON.stringify(item) === JSON.stringify(product))
+    const cheсkLocalProduct = (product: any[]) => productStore.selectedBuyInfoProduct.some(item => JSON.stringify(item) === JSON.stringify(product))
 
     //расчет прайса
     const complexPriceData = usePriceData()
@@ -94,12 +94,12 @@ export default observer(function Space() {
     }
 
     return (
-        <>
+        <Box sx={{ my: 12, px: isXUltraSmallScreen ? 1 : null }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 mb: 2,
-                mt: 12
+                // mt: 12
             }}>
                 <InputDate />
             </Box>
@@ -213,7 +213,7 @@ export default observer(function Space() {
                     </Box>
                 </Modal>
             </Box>
-        </>
+        </Box>
     )
 }
 )
