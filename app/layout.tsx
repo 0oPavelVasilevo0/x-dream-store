@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import dynamic from 'next/dynamic'
-import { Box } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import AuthProvider from "@/context/AuthProvider";
+import ThemeContextProvider from "./theme/ThemeContextProvider";
 
 const _NavBar = dynamic(() => import('./components/navbar/NavBar'), { ssr: false })
 
@@ -22,12 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body>
-          <_NavBar />
-          <Box>
-            {children}
-          </Box>
-        </body>
+        <ThemeContextProvider>
+          <CssBaseline />
+          <body>
+            <_NavBar />
+            <Box>
+              {children}
+            </Box>
+          </body>
+        </ThemeContextProvider>
       </AuthProvider>
     </html>
   );
