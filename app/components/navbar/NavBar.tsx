@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { AppBar, Avatar, Badge, Box, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Avatar, Badge, BadgeProps, Box, Divider, IconButton, InputBase, Menu, MenuItem, Stack, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import Button from '@mui/material/Button';
 import { usePathname, useRouter } from 'next/navigation';
 import Link, { NextLinkComposed } from '../link/Link';
@@ -32,7 +32,7 @@ const Search = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [customTheme.breakpoints.up('xs')]: {    //new
         marginLeft: theme.spacing(3),
         width: 'auto',
     },
@@ -96,7 +96,7 @@ export default observer(function NavBar() {
     const router = useRouter();
 
     const handleLogin = () => {
-       router.push('/login');
+        router.push('/login');
         //router.push('/api/auth/signin');// if you use server-side login
     };
     // variant={`${isActive(page.path) ? 'outlined' : 'text'}`}
@@ -104,6 +104,15 @@ export default observer(function NavBar() {
     const handleLogout = () => {
         signOut();
     };
+
+    const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+        '& .MuiBadge-badge': {
+            right: -3,
+            top: 13,
+            border: `2px solid ${theme.palette.background.paper}`,
+            padding: '0 4px',
+        },
+    }));
 
 
     const menuId = 'primary-search-account-menu';
@@ -145,34 +154,55 @@ export default observer(function NavBar() {
             }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
+            sx={{ maxWidth: '160px', justifyContent: 'center', display: 'flex', gap: 1 }}
         >
             {pages.map((page) => (
-                <MenuItem key={page.id} onClick={handleMobileMenuClose}>
-                    <Link key={page.id} href={page.path} onClick={handleMobileMenuClose} >
-                        <Typography textAlign="center">{page.name}</Typography>
-                    </Link>
-                </MenuItem>
+                <Button
+                    key={page.id}
+                    component={NextLinkComposed}
+                    to={page.path}
+                    onClick={handleMobileMenuClose}
+                    color={`${isActive(page.path) ? 'primary' : 'inherit'}`}
+                    variant={'text'}
+                    sx={{ p: isActive(page.path) ? undefined : '6px 16px', width: '90px', mx: 1 }}
+                >
+                    {/* <Typography textAlign="center"> */}
+                    {page.name}
+                    {/* </Typography> */}
+                </Button>
             ))}
+            <Divider sx={{mt: 1}} />
             {status !== "authenticated" ?
                 (
-                    <MenuItem onClick={handleLogin}>
+                    <Button
+                        component={NextLinkComposed}
+                        color={'warning'}
+                        variant={`${isActive('/login') ? 'outlined' : 'text'}`}
+                        to={'/login'}
+                        sx={{ width: '90px', mx: 1, mt: 1 }}
+                    // onClick={handleLogin}
+                    >
                         Sign in
-                    </MenuItem>
+                    </Button>
                 )
                 :
                 (
                     <>
-                        <MenuItem>
-                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent=
-                                    {productStore.selectedProductsCount}
-                                    color="error">
+                        <MenuItem disableGutters dense>
+                            <IconButton size="small" aria-label="show orders" color="inherit">
+                                <StyledBadge
+                                    badgeContent={productStore.selectedProductsCount}
+                                    color="success">
                                     <ShoppingCartIcon />
-                                </Badge>
+                                </StyledBadge>
                             </IconButton>
-                            <p>Orders</p>
+                            <p style={{ marginLeft: '10px' }}>Orders</p>
                         </MenuItem>
-                        <MenuItem onClick={handleProfileMenuOpen}>
+                        <MenuItem
+                            dense
+                            disableGutters
+                            divider
+                            onClick={handleProfileMenuOpen}>
                             <IconButton
                                 size="small"
                                 aria-label="account of current user"
@@ -181,15 +211,22 @@ export default observer(function NavBar() {
                                 color="inherit"
                             >
                                 <Avatar
-                                 alt="Profile"
-                                  src={session.user?.image || ''}
-                                   />
+                                    alt="Profile"
+                                    sizes='small'
+                                    sx={{ width: 32, height: 32 }}
+                                    src={session.user?.image || ''}
+                                />
                             </IconButton>
                             <p>Profile</p>
                         </MenuItem>
                         <MenuItem
-                            onClick={handleLogout}>
-                            Sign out
+                            dense
+                            disableGutters
+                            color='error'
+                            onClick={handleLogout}
+                            sx={{ justifyContent: 'center', display: 'flex' }}
+                        >
+                                Sign out
                         </MenuItem>
                     </>
                 )
@@ -207,8 +244,8 @@ export default observer(function NavBar() {
 
         <Box sx={{ flexGrow: 1, }}>
 
-            <AppBar sx={{
-                bgcolor: 'black',
+            <AppBar color='inherit' sx={{
+                // bgcolor: 'black',
                 alignItems: isXUltraSmallScreen ? undefined : 'center'
             }}
                 position="fixed">
@@ -226,12 +263,15 @@ export default observer(function NavBar() {
                             variant="h6"
                             noWrap
                             component="div"
-                            sx={{ display: { xs: 'none', sm: 'block' } }}
+                            // sx={{ display: isUltraSmallScreen ? 'none':  'block'  }}
+                            sx={{ display: 'block', color: 'cyan' }}
+
+
                         >
                             Dream Store
                         </Typography>
                     </Link>
-                    <Search>
+                    {/* <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -239,9 +279,9 @@ export default observer(function NavBar() {
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
                         />
-                    </Search>
+                    </Search> */}
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: isExtraSmallScreen ? 'none' : 'flex', gap: 1 }}>
                         {pages.map((page) => (
                             <Button
                                 key={page.id}
@@ -253,6 +293,7 @@ export default observer(function NavBar() {
                                     // pageChange(page);
                                 }}
                                 // variant={activePage === page.path ? 'outlined' : 'text'}
+                                color={`${isActive(page.path) ? 'primary' : 'inherit'}`}
                                 variant={`${isActive(page.path) ? 'outlined' : 'text'}`}
                                 // sx={{ p: activePage === page.path ? undefined : '6px 16px'}}
                                 sx={{ p: isActive(page.path) ? undefined : '6px 16px' }}
@@ -262,9 +303,17 @@ export default observer(function NavBar() {
                                 </Typography>
                             </Button>
                         ))}
+                    </Box>
+                    <Box sx={{ display: isExtraSmallScreen ? 'none' : 'flex', ml: isExtraSmallScreen ? 'none' : 1, gap: 1 }}>
                         {status !== "authenticated" ?
                             (
-                                <Button sx={{color: 'white'}} onClick={handleLogin}>
+                                <Button
+                                    component={NextLinkComposed}
+                                    color={'warning'}
+                                    variant={`${isActive('/login') ? 'outlined' : 'text'}`}
+                                    to={'/login'}
+                                // onClick={handleLogin}
+                                >
                                     Sign in
                                 </Button>
                             )
@@ -274,15 +323,16 @@ export default observer(function NavBar() {
                                     <IconButton
                                         component={Link}
                                         href={'/orders'}
-                                        size="large"
+                                        // size="small" 
                                         aria-label="show 4 new mails"
                                         color="inherit"
+                                        activeClassName="false"
                                     >
-                                        <Badge
+                                        <StyledBadge
                                             badgeContent={productStore.selectedProductsCount}
-                                            color="error">
+                                            color="success">
                                             <ShoppingCartIcon />
-                                        </Badge>
+                                        </StyledBadge>
                                     </IconButton>
                                     <IconButton
                                         size="small"
@@ -293,13 +343,13 @@ export default observer(function NavBar() {
                                         onClick={handleProfileMenuOpen}
                                         color="inherit"
                                     >
-                                        <Avatar alt="Profile" src={session.user?.image || ''} />
+                                        <Avatar alt="Profile" src={session.user?.image || ''} sx={{ width: 32, height: 32 }} />
                                     </IconButton>
                                 </>
                             )
                         }
                     </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <Box sx={{ display: isExtraSmallScreen ? 'flex' : 'none' }}>
                         <IconButton
                             size="large"
                             aria-label="show more"

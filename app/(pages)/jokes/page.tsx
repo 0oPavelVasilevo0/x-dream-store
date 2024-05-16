@@ -31,17 +31,27 @@ export default function Jokes() {
         <Box key={index} sx={{
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-around',
           minHeight: '27ch',
           borderRadius: 1,
-          background: '#D9D9D9',
+          bgcolor: 'background.paper',
+          // background: '#D9D9D9',
           p: 2
         }}>
-          <Typography>
-            {jokes.setup}
-          </Typography>
-          <Typography>
-            {jokes.punchline}
-          </Typography>
+          <Box textAlign={'justify'}>
+            <Typography sx={{ color: 'cyan' }}>
+              <span style={{ color: 'magenta' }}>{'if ( '}</span>
+              {jokes.setup}
+              <span style={{ color: 'magenta' }}>{' )'}</span>
+            </Typography>
+          </Box>
+          <Box textAlign={'justify'}>
+            <Typography sx={{ color: 'lightgreen' }}>
+              <span style={{ color: 'magenta' }}>{'return ( '}</span>
+              {jokes.punchline}
+              <span style={{ color: 'magenta' }}>{' )'}</span>
+            </Typography>
+          </Box>
         </Box>
       ))}
     </Box>

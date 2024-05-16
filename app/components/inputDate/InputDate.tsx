@@ -65,7 +65,7 @@ export default function InputDate() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box sx={{
                 display: 'flex',
-                color: 'white',
+                // color: 'white',
                 // alignItems: 'center',
                   width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
                 justifyContent: 'end',
@@ -85,15 +85,16 @@ export default function InputDate() {
                     }}
                     >
                         <DatePicker
-                            sx={{
-                                '& input': {
-                                    color: 'white', // Цвет текста в поле ввода
-                                },
-                                // '& .MuiFormControl-root': {
-                                //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
-                                // },
-                            // width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
-                            }}
+                            // sx={{
+                            //     '& input': {
+                            //         color: 'white', // Цвет текста в поле ввода
+                            //     },
+                            //     // '& .MuiFormControl-root': {
+                            //     //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
+                            //     // },
+                            // // width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
+                            // }}
+                            slotProps={{ textField: { size: 'small', color: 'warning' } }}
                             value={startDate}
                             onChange={handleStartDateChange}
                         />
@@ -104,15 +105,16 @@ export default function InputDate() {
                     }}
                     >
                         <DatePicker
-                            sx={{
-                                '& input': {
-                                    color: 'white',
-                                },
-                                '& .MuiFormControl-root': {
-                                    width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '27',
-                                }
-                            }}
-                        disableFuture={true}
+                            // sx={{
+                            //     // '& input': {
+                            //     //     color: 'white',
+                            //     // },
+                            //     '& .MuiFormControl-root': {
+                            //         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '27',
+                            //     }
+                            // }}
+                           slotProps={{ textField: { size: 'small', color: 'warning' } }}
+                            disableFuture={true}
                             value={endDate}
                             onChange={handleEndDateChange}
                         />

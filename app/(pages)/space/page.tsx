@@ -3,12 +3,17 @@ import InputDate from '@/app/components/inputDate/InputDate'
 import usePriceData from '@/app/hooks/usePriceData'
 import useProductsData from '@/app/hooks/useProductsData'
 import productStore from '@/app/store/productStore'
+import ThemeContextProvider from '@/app/theme/ThemeContextProvider'
 import { customTheme } from '@/app/theme/theme'
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress } from '@mui/material'
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress, Tooltip, CssBaseline, Snackbar, SnackbarOrigin, Alert } from '@mui/material'
 import { useMediaQuery } from '@mui/system'
 import { observer } from 'mobx-react'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
+interface StateAlert extends SnackbarOrigin {
+    openAlert: boolean;
+}
 
 export default observer(function Space() {
 
@@ -84,6 +89,33 @@ export default observer(function Space() {
         }
     };
 
+    const { data: session, status } = useSession()
+
+    //alert for sign in
+    // const [openAlert, setOpenAlert] = React.useState(false);
+    const [stateAlert, setStateAlert] = React.useState<StateAlert>({
+        openAlert: false,
+        vertical: 'top',
+        horizontal: 'center',
+    });
+    const { vertical, horizontal, openAlert } = stateAlert;
+
+    // const handleClickAlert = () => {
+    //     setOpenAlert(true);
+    // };
+    const handleClickAlert = (newStateAlert: SnackbarOrigin) => () => {
+        setStateAlert({ ...newStateAlert, openAlert: true });
+    };
+
+    // const handleCloseAlert = (event: React.SyntheticEvent | Event, reason?: string) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpenAlert(false);
+    // };
+    const handleCloseAlert = () => {
+        setStateAlert({ ...stateAlert, openAlert: false });
+    };
 
     if (complexData === null) {
         return <Box sx={{
@@ -119,31 +151,34 @@ export default observer(function Space() {
                         <Card key={index} sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            background: '#D9D9D9',
-                            p: 1,
-                            justifyContent: 'space-between'
+                            // background: '#D9D9D9',
+                            // p: 1,
+                            justifyContent: 'space-between',
                         }}>
-                            <CardActionArea
-                                onClick={() => {
-                                    handleOpen(product)
-                                }}
-                            >
-                                <CardMedia
-                                    component="img"
-                                    height="250"
-                                    image={product.url}
-                                    alt={product.title}
-                                    sx={{ borderRadius: '4px 4px 0 0' }}
-                                />
-                                <CardContent sx={{ p: 1 }}>
-                                    <Typography noWrap gutterBottom variant="h5" component="div">
-                                        {product.title}
-                                    </Typography>
-                                    <Typography noWrap variant="body2" color="text.secondary">
-                                        {product.explanation}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
+                            <Tooltip title='see preview' arrow sx={{ cursor: 'pointer', }}>
+                                <CardActionArea
+                                    sx={{ borderRadius: 0 }}
+                                    onClick={() => {
+                                        handleOpen(product)
+                                    }}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        height="250"
+                                        image={product.url}
+                                        alt={product.title}
+                                    // sx={{ borderRadius: '4px 4px 0 0' }}
+                                    />
+                                    <CardContent sx={{ p: 1 }}>
+                                        <Typography noWrap gutterBottom variant="h5" component="div">
+                                            {product.title}
+                                        </Typography>
+                                        <Typography noWrap variant="body2" color="text.secondary">
+                                            {product.explanation}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Tooltip>
                             <CardContent sx={{ p: 1 }}>
                                 <Typography fontSize={10}>
                                     {product.date}
@@ -156,14 +191,39 @@ export default observer(function Space() {
                                 <Button
                                     disabled={cheсkLocalProduct(product)}
                                     fullWidth
-                                    variant='contained'
-                                    sx={{
-                                        background: '#222222'
+                                    variant='outlined'
+                                    color='warning'
+                                    // sx={{
+                                    //     background: '#222222'
+                                    // }}
+                                    onClick={() => {
+                                        if (status !== "authenticated") {
+                                            handleClickAlert({ vertical: 'top', horizontal: 'center' })();
+                                        } else {
+                                            handleBuyInfo(product);
+                                        }
                                     }}
-                                    onClick={() => { handleBuyInfo(product) }}
                                 >
                                     {cheсkLocalProduct(product) ? 'in cart' : 'add to cart'}
                                 </Button>
+                                {/* <Button onClick={handleClickAlert({ vertical: 'top', horizontal: 'center'})}>Open</Button> */}
+                                <Snackbar
+                                    anchorOrigin={{ vertical, horizontal }}
+                                    open={openAlert}
+                                    autoHideDuration={6000}
+                                    onClose={handleCloseAlert}
+                                    // message="To perform actions you need to log in!"
+                                    key={vertical + horizontal}
+                                >
+                                    <Alert
+                                        // onClose={handleCloseAlert}
+                                        severity="error"
+                                        variant="filled"
+                                        sx={{ width: '100%' }}
+                                    >
+                                        To perform actions you need to log in!
+                                    </Alert>
+                                    </Snackbar>
                             </CardActions>
                         </Card>
                     ))}
@@ -192,7 +252,10 @@ export default observer(function Space() {
                                     maxHeight: '700px',
                                 }}
                             />
-                            <CardContent sx={{ p: 0, bgcolor: '#D9D9D9' }}>
+                            <CardContent sx={{
+                                p: 0,
+                                //  bgcolor: '#D9D9D9'
+                            }}>
                                 <Typography variant="h6" component="h2" p={1}>
                                     {selectedProduct && selectedProduct.title}
                                     <Typography fontSize={12}>

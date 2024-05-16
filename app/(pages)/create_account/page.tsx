@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import Link, { NextLinkComposed } from "@/app/components/link/Link";
 
 export default function CreateAccount() {
     const [name, setName] = useState('');
@@ -47,14 +48,15 @@ export default function CreateAccount() {
                 width: '36ch',
                 alignItems: 'center',
                 textAlign: 'center',
-                background: '#D9D9D9',
-                p: 1,
-                borderRadius: 1
+                // background: '#D9D9D9',
+                // p: 1,
+                // borderRadius: 1,
+                // boxShadow: '0px 0px 20px -8px',
             }}>
                 <Box sx={{ mt: 1 }}>
                     {(error === "") ? (
-                        <Typography fontSize={24} >
-                            Create Acount
+                        <Typography variant="h6" fontSize={24} sx={{ color: 'cyan' }} >
+                            Create Aсcount
                         </Typography>
                     ) : (
                         <Typography sx={{ color: 'red' }}>
@@ -62,10 +64,22 @@ export default function CreateAccount() {
                         </Typography>)}
                 </Box>
                 <Divider />
+                <Typography >
+                    Do you have an account?{" "}
+                    <Link
+                        href="/login"
+                        underline="none"
+                        activeClassName="false"
+                        sx={{ color: 'cyan' }}
+                    >
+                        Log in
+                    </Link>
+                </Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         fullWidth
                         size="small"
+                        color="warning"
                         id="name"
                         label="Name"
                         type="text"
@@ -73,11 +87,12 @@ export default function CreateAccount() {
                         onChange={(e) => setName(e.target.value)}
                         required
                         autoComplete="off"
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 5 }}
                     />
                     <TextField
                         fullWidth
                         size="small"
+                        color="warning"
                         id="email"
                         label="Email"
                         type="email"
@@ -90,6 +105,7 @@ export default function CreateAccount() {
                     <TextField
                         fullWidth
                         size="small"
+                        color="warning"
                         id="password"
                         label="Password"
                         type="password"
@@ -103,14 +119,24 @@ export default function CreateAccount() {
                         fullWidth
                         type="submit"
                         variant="contained"
-                        sx={{
-                            background: '#222222',
-                            mt: 3
-                        }}
+                        color="warning"
+                        sx={{ mt: 3 }}
                     >
                         Create User
                     </Button>
                 </form>
+                {/* <Divider sx={{ my: 2 }}>
+                    or
+                </Divider>
+                <Button
+                    fullWidth
+                    component={NextLinkComposed}
+                    to="/login"
+                    variant="outlined"
+                    color="inherit"
+                >
+                    Log in to your account
+                </Button> */}
             </Box>
         </Box>
     )

@@ -45,13 +45,15 @@ export default function Login() {
                 width: '36ch',
                 alignItems: 'center',
                 textAlign: 'center',
-                background: '#D9D9D9',
-                p: 1,
-                borderRadius: 1,
+                // bgcolor: '#121212',
+                // bgcolor: 'inherit',
+                // boxShadow: '0px 0px 20px -8px',
+                // p:2,
+                // borderRadius: 1,
             }}>
-                <Box sx={{ mt: 1 }}>
+                <Box>
                     {(error === "") ? (
-                        <Typography fontSize={24}>
+                        <Typography variant="h6" fontSize={24} sx={{ color: 'cyan' }} >
                             Log in to your account
                         </Typography>
                     ) : (
@@ -66,6 +68,7 @@ export default function Login() {
                         href="/create_account"
                         underline="none"
                         activeClassName="false"
+                        sx={{ color: 'cyan' }}
                     >
                         Sign up
                     </Link>
@@ -74,10 +77,8 @@ export default function Login() {
                     fullWidth
                     onClick={() => signIn("google")}
                     variant="contained"
-                    sx={{
-                        background: '#222222',
-                        mt: 3
-                    }}
+                    color="info"
+                    sx={{mt: 5}}
                     startIcon={<SvgGoogle />}
                 >
                     <Typography ml={4} textTransform={'none'}>
@@ -88,10 +89,8 @@ export default function Login() {
                     fullWidth
                     onClick={() => signIn("github")}
                     variant="contained"
-                    sx={{
-                        background: '#222222',
-                        mt: 1
-                    }}
+                    color="info"
+                    sx={{mt: 2}}
                     startIcon={<SvgGithub />}
                 >
                     <Typography ml={4} textTransform={'none'}>
@@ -105,6 +104,7 @@ export default function Login() {
                     <TextField
                         fullWidth
                         size="small"
+                        color="warning"
                         id="email"
                         label="Email"
                         type="email"
@@ -118,6 +118,7 @@ export default function Login() {
                     <TextField
                         fullWidth
                         size="small"
+                        color="warning"
                         id="password"
                         label="Password"
                         type="password"
@@ -126,14 +127,15 @@ export default function Login() {
                         placeholder="******"
                         required
                         autoComplete="off"
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 2 }}
                     />
                     <Button
                         fullWidth
                         type="submit"
                         variant="contained"
+                        color="warning"
                         sx={{
-                            background: '#222222',
+                            // background: '#222222',
                             mt: 3
                         }}
                     >

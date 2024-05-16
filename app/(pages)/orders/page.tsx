@@ -81,19 +81,22 @@ export default observer(function Orders() {
     };
 
     return (
-        <Box sx={{
+        <Box
+         sx={{
             justifyContent: 'center',
             display: 'grid',
             gap: '6px',
             mb: 2,
             mt: 12
         }}>
-            <Typography>Your order</Typography>
+            <Typography variant='h6'>Your order</Typography>
             {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (
-                <Box key={index} sx={{
+                <Box key={index}
+                 sx={{
                     display: 'flex',
                     maxWidth: '100ch',
-                    background: '#D9D9D9',
+                    // background: '#D9D9D9',
+                     bgcolor: 'background.paper',
                     borderRadius: 1,
                     flexDirection: 'row',
 
@@ -106,8 +109,12 @@ export default observer(function Orders() {
                         image={product.url}
                         alt={product.title}
                     />
-                    <Typography width={'100%'} fontSize={16}>{product.title}</Typography>
-                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>{product.url && getPrice(product.url)}</Typography>
+                    <Typography width={'100%'} fontSize={16}>
+                        {product.title}
+                    </Typography>
+                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>
+                        {product.url && getPrice(product.url)}
+                    </Typography>
 
                     <Button variant='outlined' onClick={() => handleDelete(index)}>Delete</Button>
                 </Box>
