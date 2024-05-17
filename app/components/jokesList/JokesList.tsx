@@ -1,13 +1,19 @@
 import React from 'react'
-import { Typography, Box, Paper, ImageList, CircularProgress } from '@mui/material';
+import { Typography, Box, Paper, ImageList, CircularProgress, useMediaQuery } from '@mui/material';
 import useJokesData from '@/app/hooks/useJokesData';
 import { useSession } from 'next-auth/react';
+import { customTheme } from '@/app/theme/theme';
 
 export default function JokesList() {
 
     const complexData = useJokesData()
 
     const { data: session, status } = useSession()
+
+    const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
+    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));
+    const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
+    const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
 
     if (complexData === null) {
         return <Box sx={{
@@ -23,21 +29,21 @@ export default function JokesList() {
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        width: '50%'
+                        width: '80%'
                     }}>
-                        <Typography sx={{ color: 'cyan' }}>
+                        <Typography sx={{ color: 'cyan', fontSize: '36px', }}>
                             <span style={{ color: 'magenta' }}>{'if ( '}</span>
                             {complexData?.jokes[0].setup}
                             <span style={{ color: 'magenta' }}>{' )'}</span>
                         </Typography>
-                        <Typography sx={{ color: 'lightgreen' }}>
+                        <Typography sx={{ color: 'lightgreen', fontSize: '36px' }}>
                             <span style={{ color: 'magenta' }}>{'return ( '}</span>
                             {complexData?.jokes[0].punchline}
                             <span style={{ color: 'magenta' }}>{' )'}</span>
                         </Typography>
                     </Box>
                 ) : (
-                    <ImageList sx={{ width: '100%', height: '90%' }} cols={5}>
+                    <ImageList sx={{ width: '100%', height: '90%' }} cols={isXUltraSmallScreen ? 2 : isUltraSmallScreen ? 3 : isExtraSmallScreen ? 4 : 5}>
                         {complexData.jokes.map((jokes, index) => (
                             <Paper key={index} elevation={3} sx={{
                                 textAlign: 'justify',

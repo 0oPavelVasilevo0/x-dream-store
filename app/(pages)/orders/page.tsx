@@ -1,11 +1,13 @@
 'use client'
 import { IMaskInput } from 'react-imask'
-import { Box, Button, CardMedia, FormControl, InputLabel, OutlinedInput, Typography, useMediaQuery, } from '@mui/material'
+import { Box, Button, CardMedia, FormControl, IconButton, InputLabel, OutlinedInput, Paper, Typography, useMediaQuery, } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { customTheme } from '@/app/theme/theme'
 import productStore from '@/app/store/productStore'
 import usePriceData from '@/app/hooks/usePriceData'
+import { useSession } from 'next-auth/react'
 
 interface CustomProps {
     onChange: (event: { target: { name: string; value: string } }) => void;
@@ -31,6 +33,7 @@ const TextMaskCustom = forwardRef<HTMLInputElement, CustomProps>(
 );
 
 export default observer(function Orders() {
+    const { data: session, status } = useSession()
 
     const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
     const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
@@ -82,72 +85,108 @@ export default observer(function Orders() {
 
     return (
         <Box
-         sx={{
-            justifyContent: 'center',
-            display: 'grid',
-            gap: '6px',
-            mb: 2,
-            mt: 12
-        }}>
-            <Typography variant='h6'>Your order</Typography>
-            {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (
-                <Box key={index}
-                 sx={{
-                    display: 'flex',
-                    maxWidth: '100ch',
-                    // background: '#D9D9D9',
-                     bgcolor: 'background.paper',
-                    borderRadius: 1,
-                    flexDirection: 'row',
-
-                    justifyContent: 'space-between',
-                    p: 2
-                }}>
-                    <CardMedia
-                        component="img"
-                        sx={{ width: 60, height: 40 }}
-                        image={product.url}
-                        alt={product.title}
-                    />
-                    <Typography width={'100%'} fontSize={16}>
-                        {product.title}
-                    </Typography>
-                    <Typography width={'100%'} fontSize={16} textAlign={'right'}>
-                        {product.url && getPrice(product.url)}
-                    </Typography>
-
-                    <Button variant='outlined' onClick={() => handleDelete(index)}>Delete</Button>
-                </Box>
-            ))}
-            <Box sx={{
-                display: 'flex',
-                flexDirection: isXUltraSmallScreen ? 'column' : 'row',
-                gap: '6px',
-                justifyContent: 'space-between',
-                p: 2
+            sx={{
+                justifyContent: 'center',
+                display: 'grid',
+                gap: 2,
+                mb: 2,
+                mt: 12,
+                p: '0 10px'
             }}>
-                <FormControl>
-                    <InputLabel htmlFor="formatted-text-mask-input">your phone number</InputLabel>
-                    <OutlinedInput
-                        label="your phone number"
-                        size='small'
-                        value={values.textmask}
-                        onChange={handleChange}
-                        name="textmask"
-                        id="formatted-text-mask-input"
-                        inputComponent={TextMaskCustom as any}
-                        sx={{
-                            textAlign: 'center',
-                            justifyContent: 'center'
-                        }}
-                    />
-                </FormControl>
-                <Button
-                    variant='outlined'
-                    sx={{ height: '40px', width: isXUltraSmallScreen ? '100%' : '195px' }}>
-                    order
-                </Button>
+            <Box>
+                <Typography variant='h6'>Your order</Typography>
             </Box>
+            {(status !== "authenticated") ? (
+                <Typography variant='h6'>You have no available orders! Login or register!</Typography>
+            ) : (
+                <>
+                    {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (
+                        <Paper key={index} elevation={3}
+                            sx={{
+                                display: 'flex',
+                                // maxWidth: '80ch',
+                                // background: '#D9D9D9',
+                                //  bgcolor: 'background.paper',
+                                // borderRadius: 1,
+                                flexDirection: 'row',
+                                height: "160",
+                                justifyContent: 'space-between',
+                                // p: 2
+                            }}>
+                            <Box sx={{ width: '20ch' }}>
+                                <CardMedia
+                                    component="img"
+                                    height="160"
+                                    sx={{ borderRadius: '4px 0 0 4px' }}
+                                    image={product.url}
+                                    alt={product.title}
+                                />
+                            </Box>
+                            <Box sx={{ maxWidth: '40ch', display: 'flex', flexDirection: 'column', p: 1 }}>
+                                <Box sx={{ height: '50%', display: 'flex', alignItems: 'flex-end', p: 1 }}>
+                                    <Typography fontSize={isXUltraSmallScreen ? 16 : 20} sx={{ textAlign: 'justify' }}>
+                                        {product.title}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ height: '50%', display: 'flex', alignItems: 'flex-end' }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: isXUltraSmallScreen ? 'column' : 'row', width: '100%' }}>
+                                        <Typography fontSize={isXUltraSmallScreen ? 14 : 16} sx={{ textAlign: isXUltraSmallScreen ? 'center' : null, color: 'gold', p: 1 }}>
+                                            {product.url && getPrice(product.url)}
+                                        </Typography>
+                                        {/* <Button sx={{ alignItems: isXUltraSmallScreen ? 'center': null }}
+                                    color='inherit'
+                                    variant='outlined'
+                                    onClick={() => handleDelete(index)}
+                                >
+                                    Delete
+                                </Button> */}
+                                        <Box sx={{ display: isXUltraSmallScreen ? 'flex' : null, justifyContent: 'center' }}>
+                                            <IconButton
+                                                size={isXUltraSmallScreen ? 'small' : undefined}
+                                                aria-label="delete"
+                                                onClick={() => handleDelete(index)}
+                                            >
+                                                <DeleteIcon fontSize={isXUltraSmallScreen ? 'small' : undefined} />
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
+
+                            {/* <Button variant='outlined' onClick={() => handleDelete(index)}>Delete</Button> */}
+                        </Paper>
+                    ))}
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: isXUltraSmallScreen ? 'column' : 'row',
+                        gap: '6px',
+                        justifyContent: 'space-between',
+                        p: 2
+                    }}>
+                        <FormControl>
+                            <InputLabel htmlFor="formatted-text-mask-input">your phone number</InputLabel>
+                            <OutlinedInput
+                                label="your phone number"
+                                size='small'
+                                value={values.textmask}
+                                onChange={handleChange}
+                                name="textmask"
+                                id="formatted-text-mask-input"
+                                inputComponent={TextMaskCustom as any}
+                                sx={{
+                                    textAlign: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            />
+                        </FormControl>
+                        <Button
+                            variant='outlined'
+                            sx={{ height: '40px', width: isXUltraSmallScreen ? '100%' : '195px' }}>
+                            order
+                        </Button>
+                    </Box>
+                </>
+            )}
         </Box>
     )
 }

@@ -1,7 +1,7 @@
 'use client'
 import useJokesData from '@/app/hooks/useJokesData'
 import { customTheme } from '@/app/theme/theme'
-import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material'
+import { Box, CircularProgress, Paper, Typography, useMediaQuery } from '@mui/material'
 
 export default function Jokes() {
   const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
@@ -28,13 +28,12 @@ export default function Jokes() {
     }}
     >
       {complexData.jokes.map((jokes, index) => (
-        <Box key={index} sx={{
+        <Paper key={index} elevation={6} sx={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-around',
           minHeight: '27ch',
-          borderRadius: 1,
-          bgcolor: 'background.paper',
+          // borderRadius: 1,
           // background: '#D9D9D9',
           p: 2
         }}>
@@ -52,7 +51,7 @@ export default function Jokes() {
               <span style={{ color: 'magenta' }}>{' )'}</span>
             </Typography>
           </Box>
-        </Box>
+        </Paper>
       ))}
     </Box>
   )
