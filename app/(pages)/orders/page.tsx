@@ -95,7 +95,6 @@ export default observer(function Orders() {
                                 flexDirection: 'row',
                                 height: "160",
                                 justifyContent: 'space-between',
-                                // p: 2
                             }}>
                             <Box sx={{ width: '20ch' }}>
                                 <CardMedia
