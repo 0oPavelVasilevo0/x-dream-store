@@ -7,9 +7,9 @@ import { customTheme } from '@/app/theme/theme'
 import productStore from '@/app/store/productStore'
 import usePriceData from '@/app/hooks/usePriceData'
 import { useSession } from 'next-auth/react'
-import { postHandler } from '../api/emailRoute/route'
 import { toJS } from 'mobx'
 import { Session } from 'next-auth'
+import { postHandler } from '../api/mailRoute/mailData'
 
 export default observer(function Orders() {
     const { data: session, status } = useSession()

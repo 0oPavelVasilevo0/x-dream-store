@@ -1,7 +1,12 @@
 'use server';
 import nodemailer from 'nodemailer';
 
-export async function postHandler(req) {
+interface Request {
+    method: string;
+    body: string; // Тело запроса в формате JSON
+}
+
+export async function postHandler(req: Request): Promise<{ success: boolean; message: string }> {
     const { method, body } = req;
 
     if (method === 'POST') {
@@ -32,7 +37,7 @@ export async function postHandler(req) {
         // Генерируем HTML содержимое письма
         const htmlContent = `
             <h2>Your Order</h2>
-            ${products && products.map(product => `<img src="${product.url}" alt="${product.title}" />`).join('')}
+            ${products && products.map((product: { url: string; title: string; }) => `<img src="${product.url}" alt="${product.title}" />`).join('')}
         `;
 
         // Опции отправки письма
