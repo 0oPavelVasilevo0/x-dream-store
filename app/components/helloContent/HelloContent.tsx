@@ -11,7 +11,13 @@ export default function HelloContent() {
     const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
     return (
-        <>
+        <Box sx={{
+            width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            textAlign: 'center'
+        }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: isXUltraSmallScreen ? "end" : 'center',
@@ -22,19 +28,21 @@ export default function HelloContent() {
                 minHeight: isExtraSmallScreen ? '200px' : null,
             }}>
                 {(status !== "authenticated") ? (
-                    <Typography fontSize={22} >
-                        Hello! Dream Store is glad to see you! You can register or login to make unusual purchases, or just look at cool content!
-                    </Typography>
+                    <Box sx={{ p: isExtraSmallScreen ? 1 : null }}>
+                        <Typography fontSize={16} >
+                            {'Hello! Dream Store is glad to see you! You can register or login to make unusual purchases, or just look at cool content!'}
+                        </Typography>
+                    </Box>
                 ) : (
-                    <>
-                            <Typography fontSize={22} sx={{ p : isExtraSmallScreen? 1: null  }} >
+                    <Box sx={{ p: isExtraSmallScreen ? 1 : null }}>
+                        <Typography fontSize={22}  >
                             {'Hello, '}{session.user?.name}{'!'}
                         </Typography>
-                            <Divider variant="fullWidth" orientation={isXUltraSmallScreen ? "horizontal" : isExtraSmallScreen ? "vertical" : "horizontal"} flexItem />
-                            <Typography fontSize={16} sx={{ p: isExtraSmallScreen ? 1 : null }}>
+                        <Divider variant="fullWidth" orientation={isXUltraSmallScreen ? "horizontal" : isExtraSmallScreen ? "vertical" : "horizontal"} flexItem />
+                        <Typography fontSize={16}>
                             {'Welcome to the Dream Store! Enjoy these extraordinary products!'}
                         </Typography>
-                    </>
+                    </Box>
                 )}
             </Box>
             <Divider flexItem />
@@ -45,10 +53,10 @@ export default function HelloContent() {
                 width: '100%',
                 height: isExtraSmallScreen ? null : 'calc(50vh - 12px)',
                 minHeight: isExtraSmallScreen ? '200px' : null,
-                p: isExtraSmallScreen ? 1: null,
+                p: isExtraSmallScreen ? 1 : null,
             }}>
                 {'This store is made for fun. No payments, everything is fictitious. Cool pictures obtained using the NASA API, as well as funny jokes that not everyone will understand. The fictitious price calculation is taken from the Bitcoin APi)))'}
             </Box>
-        </>
+        </Box>
     )
 }

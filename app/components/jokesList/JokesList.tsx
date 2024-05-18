@@ -17,7 +17,7 @@ export default function JokesList() {
 
     if (complexData === null) {
         return <Box sx={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
+            display: 'flex', justifyContent: 'center', alignItems: 'center', height: isExtraSmallScreen ? '100%' : '80%'
         }}>
             <CircularProgress />
         </Box >
@@ -29,14 +29,14 @@ export default function JokesList() {
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        width: '80%'
+                        width: '100%'
                     }}>
-                        <Typography sx={{ color: 'cyan', fontSize: '36px', }}>
+                        <Typography sx={{ color: 'cyan', fontSize: '30px', }}>
                             <span style={{ color: 'magenta' }}>{'if ( '}</span>
                             {complexData?.jokes[0].setup}
                             <span style={{ color: 'magenta' }}>{' )'}</span>
                         </Typography>
-                        <Typography sx={{ color: 'lightgreen', fontSize: '36px' }}>
+                        <Typography sx={{ color: 'lightgreen', fontSize: '30px' }}>
                             <span style={{ color: 'magenta' }}>{'return ( '}</span>
                             {complexData?.jokes[0].punchline}
                             <span style={{ color: 'magenta' }}>{' )'}</span>

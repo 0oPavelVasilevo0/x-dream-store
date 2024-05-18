@@ -2,7 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography, useTheme } from "@mui/material";
 import Link from "@/app/components/link/Link";
 import SvgGoogle from "@/app/components/svg/google/SvgGoogle";
 import SvgGithub from "@/app/components/svg/github/SvgGithub";
@@ -11,6 +11,7 @@ export default function Login() {
     const { status } = useSession();
     const router = useRouter();
     // const pathname = usePathname();
+    // const theme = useTheme();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -77,7 +78,8 @@ export default function Login() {
                     fullWidth
                     onClick={() => signIn("google")}
                     variant="contained"
-                    color="info"
+                    // color="info"
+                    color="inherit"
                     sx={{mt: 5}}
                     startIcon={<SvgGoogle />}
                 >
@@ -89,7 +91,8 @@ export default function Login() {
                     fullWidth
                     onClick={() => signIn("github")}
                     variant="contained"
-                    color="info"
+                    // color="info"
+                    color="inherit"
                     sx={{mt: 2}}
                     startIcon={<SvgGithub />}
                 >

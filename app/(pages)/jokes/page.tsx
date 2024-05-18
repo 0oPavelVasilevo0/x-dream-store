@@ -24,7 +24,8 @@ export default function Jokes() {
       gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : '4ch',
       justifyContent: isSmallScreen ? 'center' : 'center',
       mb: 2,
-      mt: 12
+      mt: 12,
+      p: isXUltraSmallScreen ? '0 12px' : null
     }}
     >
       {complexData.jokes.map((jokes, index) => (

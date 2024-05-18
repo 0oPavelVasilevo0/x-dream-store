@@ -22,7 +22,7 @@ export default function Images() {
 
     if (countData === null) {
         return <Box sx={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%'
+            display: 'flex', justifyContent: 'center', alignItems: 'center', height: isExtraSmallScreen ? '100%' : '80%',
         }}>
             <CircularProgress />
         </Box >
@@ -37,17 +37,28 @@ export default function Images() {
                         flexDirection: 'column',
                         position: 'relative',
                         width: '100%',
-                        height: '80%'
+                        height: isExtraSmallScreen ? '100%' : '80%'
                     }}>
+                        {/* {(countData === null) ?
+                        (
+                        <CircularProgress />
+                        ) : ( */}
                         <Image
                             alt="img"
                             src={pic}
                             fill
                         />
+                        {/* )} */}
                     </Box>
                 ) : (
-                    <ImageList sx={{ width: '100%', height: '80%' }} cols={isXUltraSmallScreen ? 2 : isUltraSmallScreen ? 3 : isExtraSmallScreen ? 4 : 5} rowHeight={144}>
-                        {countData.products
+                    <ImageList sx={{
+                        width: '100%',
+                        height: isExtraSmallScreen ? '100%' : '80%'
+                    }}
+                        cols={isXUltraSmallScreen ? 2 : isUltraSmallScreen ? 3 : isExtraSmallScreen ? 4 : 5}
+                        rowHeight={144}
+                    >
+                        { countData.products
                             .filter(product => product.media_type === 'image')
                             .map((product, index) => (
                                 <ImageListItem key={index}>
