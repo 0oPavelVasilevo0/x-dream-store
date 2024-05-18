@@ -10,8 +10,7 @@ import SvgGithub from "@/app/components/svg/github/SvgGithub";
 export default function Login() {
     const { status } = useSession();
     const router = useRouter();
-    // const pathname = usePathname();
-    // const theme = useTheme();
+
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

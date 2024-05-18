@@ -27,6 +27,7 @@ export default function Home() {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: isExtraSmallScreen ? 'column' : 'row',
+          // flexDirection: 'column',
           height: isExtraSmallScreen ? null : '100vh',
           width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
           minHeight: '560px'
@@ -37,15 +38,15 @@ export default function Home() {
             alignItems: 'center',
             width: isExtraSmallScreen ? '100%' : '20%',
           }}>
-            <Box sx={{
+            {/* <Box sx={{
               width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               textAlign: 'center'
-            }}>
+            }}> */}
               <HelloContent />
-            </Box>
+            {/* </Box> */}
           </Box>
           <Divider orientation={isExtraSmallScreen ? "horizontal" : "vertical"} flexItem />
           <Box sx={{
@@ -74,13 +75,13 @@ export default function Home() {
               flexDirection: 'column',
               alignItems: 'center',
               width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
-              height: isExtraSmallScreen ? '300px' : 'calc(50vh - 12px)',
+              height: isExtraSmallScreen ? '340px' : 'calc(50vh - 12px)',
             }}>
               <JokesList />
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Box>  
     </main>
   );
 }
