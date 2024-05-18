@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/utils/user.ts", "context/AuthProvider.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/utils/user.ts", "context/AuthProvider.tsx", "app/(pages)/api/emailRoute/route.js"],
   "exclude": ["node_modules"]
 }
