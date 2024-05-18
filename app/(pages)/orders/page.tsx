@@ -1,58 +1,24 @@
 'use client'
-import { IMaskInput } from 'react-imask'
-import { Box, Button, CardMedia, FormControl, IconButton, InputLabel, OutlinedInput, Paper, Typography, useMediaQuery, } from '@mui/material'
+import { Box, Button, CardMedia, IconButton, Paper, Typography, useMediaQuery } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { useEffect, useState, } from 'react'
 import { observer } from 'mobx-react'
 import { customTheme } from '@/app/theme/theme'
 import productStore from '@/app/store/productStore'
 import usePriceData from '@/app/hooks/usePriceData'
 import { useSession } from 'next-auth/react'
-
-interface CustomProps {
-    onChange: (event: { target: { name: string; value: string } }) => void;
-    name: string;
-}
-
-const TextMaskCustom = forwardRef<HTMLInputElement, CustomProps>(
-    function TextMaskCustom(props, ref) {
-        const { onChange, ...other } = props;
-        return (
-            <IMaskInput
-                {...other}
-                mask="+7(000) 000-00-00"
-                // definitions={{
-                //     '#': /[1-9]/,
-                // }}
-                inputRef={ref}
-                onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
-                overwrite
-            />
-        );
-    },
-);
+import { postHandler } from '../api/emailRoute/route'
+import { toJS } from 'mobx'
+import { Session } from 'next-auth'
 
 export default observer(function Orders() {
     const { data: session, status } = useSession()
 
-    const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
-    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
-    const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'))
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
 
-    const [values, setValues] = useState({
-        textmask: '(000) 000-00-00',
-        numberformat: '1320',
-    })
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
-    };
-
     const selectedBuyInfoProduct = productStore.selectedBuyInfoProduct;
+
+    const [isOrdering, setIsOrdering] = useState(false);
 
     useEffect(() => {
         // Load selected products from localStorage when the component mounts
@@ -83,6 +49,28 @@ export default observer(function Orders() {
         }
     };
 
+    const handleOrder = async (session: Session | null) => {
+        setIsOrdering(true);
+
+        try {
+            const userMail = session?.user?.email; // Получаем адрес электронной почты пользователя из сеанса
+            console.log('User email:', userMail);
+            const response = await postHandler({
+                method: 'POST',
+                body: JSON.stringify({
+                    userEmail: userMail,
+                    products: toJS(selectedBuyInfoProduct),
+                }),
+            });
+            console.log(response);
+            // Дополнительная логика при успешной отправке письма
+        } catch (error) {
+            console.error(error);
+            // Обработка ошибок при отправке письма
+        } finally {
+            setIsOrdering(false);
+        }
+    };
     return (
         <Box
             sx={{
@@ -94,7 +82,7 @@ export default observer(function Orders() {
                 p: '0 10px'
             }}>
             <Box>
-                <Typography variant='h6'>Your order</Typography>
+                <Typography variant='h6'>Your order{session?.user?.email}</Typography>
             </Box>
             {(status !== "authenticated") ? (
                 <Typography variant='h6'>You have no available orders! Login or register!</Typography>
@@ -104,10 +92,6 @@ export default observer(function Orders() {
                         <Paper key={index} elevation={3}
                             sx={{
                                 display: 'flex',
-                                // maxWidth: '80ch',
-                                // background: '#D9D9D9',
-                                //  bgcolor: 'background.paper',
-                                // borderRadius: 1,
                                 flexDirection: 'row',
                                 height: "160",
                                 justifyContent: 'space-between',
@@ -123,23 +107,16 @@ export default observer(function Orders() {
                                 />
                             </Box>
                             <Box sx={{ maxWidth: '40ch', display: 'flex', flexDirection: 'column', p: 1 }}>
-                                <Box sx={{ height: '50%', display: 'flex', alignItems: 'flex-end', p: 1 }}>
+                                <Box sx={{ height: '50%', width: '100%', display: 'flex', alignItems: 'flex-end', p: 1 }}>
                                     <Typography fontSize={isXUltraSmallScreen ? 16 : 20} sx={{ textAlign: 'justify' }}>
                                         {product.title}
                                     </Typography>
                                 </Box>
-                                <Box sx={{ height: '50%', display: 'flex', alignItems: 'flex-end' }}>
+                                <Box sx={{ height: '50%', width: '100%', display: 'flex', alignItems: 'flex-end' }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: isXUltraSmallScreen ? 'column' : 'row', width: '100%' }}>
                                         <Typography fontSize={isXUltraSmallScreen ? 14 : 16} sx={{ textAlign: isXUltraSmallScreen ? 'center' : null, color: 'gold', p: 1 }}>
                                             {product.url && getPrice(product.url)}
                                         </Typography>
-                                        {/* <Button sx={{ alignItems: isXUltraSmallScreen ? 'center': null }}
-                                    color='inherit'
-                                    variant='outlined'
-                                    onClick={() => handleDelete(index)}
-                                >
-                                    Delete
-                                </Button> */}
                                         <Box sx={{ display: isXUltraSmallScreen ? 'flex' : null, justifyContent: 'center' }}>
                                             <IconButton
                                                 size={isXUltraSmallScreen ? 'small' : undefined}
@@ -152,8 +129,6 @@ export default observer(function Orders() {
                                     </Box>
                                 </Box>
                             </Box>
-
-                            {/* <Button variant='outlined' onClick={() => handleDelete(index)}>Delete</Button> */}
                         </Paper>
                     ))}
                     <Box sx={{
@@ -163,26 +138,12 @@ export default observer(function Orders() {
                         justifyContent: 'space-between',
                         p: 2
                     }}>
-                        <FormControl>
-                            <InputLabel htmlFor="formatted-text-mask-input">your phone number</InputLabel>
-                            <OutlinedInput
-                                label="your phone number"
-                                size='small'
-                                value={values.textmask}
-                                onChange={handleChange}
-                                name="textmask"
-                                id="formatted-text-mask-input"
-                                inputComponent={TextMaskCustom as any}
-                                sx={{
-                                    textAlign: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            />
-                        </FormControl>
                         <Button
+                            disabled={isOrdering}
+                            onClick={() =>  handleOrder(session) }
                             variant='outlined'
                             sx={{ height: '40px', width: isXUltraSmallScreen ? '100%' : '195px' }}>
-                            order
+                            {isOrdering ? 'Ordering...' : 'Order'}
                         </Button>
                     </Box>
                 </>
