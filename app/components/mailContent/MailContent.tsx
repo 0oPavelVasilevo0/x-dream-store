@@ -17,12 +17,12 @@ export function MailContent(products: any[]) {
                         <Container style={{ marginTop: '6px', borderRadius: '6px', backgroundColor: '#3e3c46' }} key={product.url}>
                             <Img src={product.url} alt={product.title} width="100%" height="auto" style={{ borderRadius: '6px 6px 0 0' }} />
                             <Container style={{ width: '100%', }}>
-                                <Heading as='h4' style={{ padding: '4px', color: '#aeea00', textAlign :'center' }} >{product.title}</Heading>
+                                <Heading as='h4' style={{ padding: '4px', color: '#aeea00', textAlign: 'center', borderBottom: '1px solid #aeea00', }} >{product.title}</Heading>
                                 <Button href={product.hdurl} download style={{
                                     width: '100%',
                                     padding: '10px 0',
-                                    backgroundColor: '#00b8d4',
-                                    color: '#fff',
+                                    backgroundColor: 'inherit',
+                                    color: '#aeea00',
                                     textAlign: 'center',
                                     textDecoration: 'none',
                                     borderRadius: '0 0 4px 4px',

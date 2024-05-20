@@ -82,13 +82,14 @@ export default observer(function Orders() {
                 mt: 12,
                 p: '0 6px'
             }}>
-            <Box>
-                <Typography variant='h6'>{session?.user?.name}, Your order:</Typography>
-            </Box>
+
             {(status !== "authenticated") ? (
                 <Typography variant='h6'>You have no available orders! Login or register!</Typography>
             ) : (
                 <>
+                    <Box>
+                        <Typography variant='h6'>{session?.user?.name}, Your order:</Typography>
+                    </Box>
                     {selectedBuyInfoProduct && selectedBuyInfoProduct.map((product: any, index: number) => (
                         <Paper key={index} elevation={3}
                             sx={{
@@ -133,20 +134,19 @@ export default observer(function Orders() {
                     ))}
                     <Box sx={{
                         display: 'flex',
-                        flexDirection: isXUltraSmallScreen ? 'column' : 'row',
+                            flexDirection: isExtraSmallScreen ? 'column' : 'row',
                         gap: '6px',
                         justifyContent: 'space-between',
-                        p: 2
                     }}>
                         <Button
                             disabled={isOrdering}
-                            onClick={() =>  handleOrder(session) }
+                            onClick={() => handleOrder(session)}
                             variant='outlined'
-                            sx={{ height: '40px', width: isXUltraSmallScreen ? '100%' : '195px' }}>
+                                sx={{ height: '40px', width: isExtraSmallScreen ? '100%' : '176px' }}>
                             {isOrdering ? 'Ordering...' : 'Order'}
                         </Button>
-                            <Typography fontSize={14} sx={{ color: 'cornflowerblue', textAlign: 'center'}}>
-                                your order will be sent to {session?.user?.email}
+                        <Typography fontSize={12} sx={{ color: 'cornflowerblue', textAlign: 'center', p: 1 }}>
+                            your order will be sent to {session?.user?.email}
                         </Typography>
                     </Box>
                 </>
