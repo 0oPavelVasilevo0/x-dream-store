@@ -14,6 +14,7 @@ import { postHandler } from '../api/mailRoute/mailData'
 export default observer(function Orders() {
     const { data: session, status } = useSession()
 
+    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
 
     const selectedBuyInfoProduct = productStore.selectedBuyInfoProduct;
@@ -79,10 +80,10 @@ export default observer(function Orders() {
                 gap: 2,
                 mb: 2,
                 mt: 12,
-                p: '0 10px'
+                p: '0 6px'
             }}>
             <Box>
-                <Typography variant='h6'>Your order{session?.user?.email}</Typography>
+                <Typography variant='h6'>{session?.user?.name}, Your order:</Typography>
             </Box>
             {(status !== "authenticated") ? (
                 <Typography variant='h6'>You have no available orders! Login or register!</Typography>
@@ -96,16 +97,16 @@ export default observer(function Orders() {
                                 height: "160",
                                 justifyContent: 'space-between',
                             }}>
-                            <Box sx={{ width: '20ch' }}>
+                            <Box sx={{ width: isExtraSmallScreen ? '20ch' : '30ch' }}>
                                 <CardMedia
                                     component="img"
-                                    height="160"
+                                    height="180"
                                     sx={{ borderRadius: '4px 0 0 4px' }}
                                     image={product.url}
                                     alt={product.title}
                                 />
                             </Box>
-                            <Box sx={{ maxWidth: '40ch', display: 'flex', flexDirection: 'column', p: 1 }}>
+                            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', p: 1 }}>
                                 <Box sx={{ height: '50%', width: '100%', display: 'flex', alignItems: 'flex-end', p: 1 }}>
                                     <Typography fontSize={isXUltraSmallScreen ? 16 : 20} sx={{ textAlign: 'justify' }}>
                                         {product.title}
@@ -144,6 +145,9 @@ export default observer(function Orders() {
                             sx={{ height: '40px', width: isXUltraSmallScreen ? '100%' : '195px' }}>
                             {isOrdering ? 'Ordering...' : 'Order'}
                         </Button>
+                            <Typography fontSize={14} sx={{ color: 'cornflowerblue', textAlign: 'center'}}>
+                                your order will be sent to {session?.user?.email}
+                        </Typography>
                     </Box>
                 </>
             )}
