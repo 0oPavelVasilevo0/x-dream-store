@@ -1,5 +1,7 @@
 'use server';
 import nodemailer from 'nodemailer';
+import { render } from '@react-email/render';
+import { MailContent } from '@/app/components/mailContent/MailContent';
 
 interface Request {
     method: string;
@@ -16,7 +18,7 @@ export async function postHandler(req: Request): Promise<{ success: boolean; mes
         const keyMail = process.env.NEXT_MAIL_KEY;
         const Mail = process.env.NEXT_MAIL;
 
-        // Логируем значения для отладки
+        // Лог значения для отладки
         console.log('Parsed Body:', parsedBody);
         console.log('User Email:', userEmail);
 
@@ -35,17 +37,14 @@ export async function postHandler(req: Request): Promise<{ success: boolean; mes
         });
 
         // Генерируем HTML содержимое письма
-        const htmlContent = `
-            <h2>Your Order</h2>
-            ${products && products.map((product: { url: string; title: string; }) => `<img src="${product.url}" alt="${product.title}" />`).join('')}
-        `;
-
+        const mailContentHTML = render(MailContent(products));
         // Опции отправки письма
         const mailOptions = {
             from: Mail,
             to: userEmail,
             subject: 'Your Order',
-            html: htmlContent,
+            // html: htmlContent,
+            html: mailContentHTML,
         };
 
         // Возвращаем Promise, который разрешается после отправки письма
