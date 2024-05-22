@@ -1,5 +1,5 @@
 'use client'
-import { Box, Divider, Typography, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography, useMediaQuery } from "@mui/material";
 import { customTheme } from "./theme/theme";
 import Images from "./components/images/Images";
 import JokesList from "./components/jokesList/JokesList";
@@ -19,69 +19,79 @@ export default function Home() {
         sx={{
           display: 'flex',
           justifyContent: 'center',
+          // alignItems: 'center',
           p: isXUltraSmallScreen ? '0ch 2ch' : 0,
         }}
       >
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: isExtraSmallScreen ? 'column' : 'row',
-          // flexDirection: 'column',
-          height: isExtraSmallScreen ? null : '100vh',
-          width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
-          minHeight: '560px'
-        }}>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: isExtraSmallScreen ? '100%' : '20%',
-          }}>
-            {/* <Box sx={{
+        {(status === 'loading') ? (
+          <Box sx={{ height: '100vh', alignContent: 'center' }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: isExtraSmallScreen ? 'column' : 'row',
+              // flexDirection: 'column',
+              height: isExtraSmallScreen ? null : '100vh',
+              width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
+              minHeight: '560px'
+            }}>
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: isExtraSmallScreen ? '100%' : '20%',
+              }}>
+                {/* <Box sx={{
               width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               textAlign: 'center'
             }}> */}
-              <HelloContent />
-            {/* </Box> */}
-          </Box>
-          <Divider orientation={isExtraSmallScreen ? "horizontal" : "vertical"} flexItem />
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: isExtraSmallScreen ? '100%' : '80%'
-          }}>
-            <Box sx={{
-              display: 'flex',
-              justifyContent: 'end',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
-              height: isExtraSmallScreen ? '300px' : 'calc(50vh - 12px)',
-            }}>
-              <Images />
+                <HelloContent />
+                {/* </Box> */}
+              </Box>
+              <Divider orientation={isExtraSmallScreen ? "horizontal" : "vertical"} flexItem />
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: isExtraSmallScreen ? '100%' : '80%'
+              }}>
+                <Box sx={{
+                  display: 'flex',
+                  justifyContent: 'end',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
+                  height: isExtraSmallScreen ? '300px' : 'calc(50vh - 12px)',
+                }}>
+                  <Images />
+                </Box>
+                <Divider variant={isExtraSmallScreen ? "fullWidth" : "middle"} flexItem>
+                  Space or Jokes
+                </Divider>
+                <Box sx={{
+                  display: 'flex',
+                  justifyContent: (status !== "authenticated") ? 'center' : 'top',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
+                  height: isExtraSmallScreen ? '340px' : 'calc(50vh - 12px)',
+                  // minHeight: (status !== "authenticated" || isExtraSmallScreen) ? '140px' : null
+                }}>
+                  <JokesList />
+                </Box>
+              </Box>
             </Box>
-            <Divider variant={isExtraSmallScreen ? "fullWidth" : "middle"} flexItem>
-              Space or Jokes
-            </Divider>
-            <Box sx={{
-              display: 'flex',
-              justifyContent: (status !== "authenticated") ? 'center' : 'top',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: isExtraSmallScreen ? '100%' : 'calc(100% - 32px)',
-              height: isExtraSmallScreen ? '340px' : 'calc(50vh - 12px)',
-            }}>
-              <JokesList />
-            </Box>
-          </Box>
-        </Box>
-      </Box>  
+          </>
+        )}
+      </Box>
     </main>
   );
 }
