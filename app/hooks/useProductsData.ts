@@ -15,17 +15,20 @@ interface Product {
 
 const useProductsData = (startDate: string, endDate: string) => {
     const [data, setData] = useState<Product | null>(null);
+    const [isLoading, setIsLoading] = useState(true);//состояние отслеживания загрузки
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);//начало загрузки
                 const productsData = await Products(startDate, endDate);
-
                 setData({
                     products: productsData,
                 });
             } catch (error) {
                 console.error('Error fetching complex data:', error);
+            } finally {
+                setIsLoading(false);//после завершения загрузки
             }
         };
 
@@ -33,7 +36,7 @@ const useProductsData = (startDate: string, endDate: string) => {
     }, [startDate, endDate]
     );
 
-    return data;
+    return { data, isLoading };
 
 };
 
