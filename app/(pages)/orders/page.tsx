@@ -187,7 +187,7 @@ export default observer(function Orders() {
                         }}>
                             <Card component={Paper} elevation={6} sx={{
                                 borderRadius: isExtraSmallScreen ? 0 : 2,
-                                height: isXUltraSmallScreen ? '100vh' : null
+                                height: isXUltraSmallScreen ? '100vh' : null,
                             }}>
                                 <CardMedia
                                     component="img"
@@ -195,7 +195,7 @@ export default observer(function Orders() {
                                     alt={selectedProduct && selectedProduct.title}
                                     loading='lazy'
                                     sx={{
-                                        maxHeight: isXUltraSmallScreen ? '68vh' : '700px',
+                                        maxHeight: isXUltraSmallScreen ? '58vh' : '700px',
                                         //  // height: isXUltraSmallScreen ? '68vh' : null,
                                         objectFit: 'contain',
                                     }}
@@ -203,7 +203,7 @@ export default observer(function Orders() {
                                 <CardContent sx={{
                                     p: 0,
                                 }}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, alignItems: 'center', p: isXUltraSmallScreen ? '4px 8px' : 1 }}>
                                         <Typography variant="h6" component="h2" >
                                             {selectedProduct && selectedProduct.title}
                                             <Typography fontSize={12}>
@@ -216,7 +216,7 @@ export default observer(function Orders() {
                                     </Box>
                                     <Box sx={{
                                         p: 0.5,
-                                        height: isXUltraSmallScreen ? '20vh' : 120,
+                                        maxHeight: isXUltraSmallScreen ? '32vh' : 120,
                                         overflowY: 'auto',
                                     }}>
                                         <Typography variant="body2" component="p"

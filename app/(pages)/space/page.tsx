@@ -144,7 +144,7 @@ export default observer(function Space() {
     );
 
     return (
-        <Box sx={{ minHeight: isXUltraSmallScreen ? '690px' : '100vh', py: 12, px: isXUltraSmallScreen ? 1 : null }}>
+        <Box sx={{ minHeight: '100vh', py: 12, px: isXUltraSmallScreen ? 1 : null }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -258,22 +258,22 @@ export default observer(function Space() {
                     }}>
                         <Card component={Paper} elevation={6} sx={{
                             borderRadius: isExtraSmallScreen ? 0 : 2,
-                            height: isXUltraSmallScreen ? '100vh' : null
+                           height: isXUltraSmallScreen ? '100vh' : null,
                         }}>
                             <CardMedia
                                 component="img"
                                 image={selectedProduct && selectedProduct.hdurl}
                                 alt={selectedProduct && selectedProduct.title}
                                 sx={{
-                                    maxHeight: isXUltraSmallScreen ? null : '700px',
-                                    height: isXUltraSmallScreen ? '68vh' : null,
+                                    maxHeight: isXUltraSmallScreen ? '58vh' : '700px',
+                                    //  // height: isXUltraSmallScreen ? '68vh' : null,
                                     objectFit: 'contain',
                                 }}
                             />
                             <CardContent sx={{
-                                p: 0,
+                                p:0,
                             }}>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, alignItems: 'center', p: isXUltraSmallScreen ? '4px 8px' : 1 }}>
                                     <Typography variant="h6" component="h2" p={1}>
                                         {selectedProduct && selectedProduct.title}
                                         <Typography fontSize={12}>
@@ -286,13 +286,13 @@ export default observer(function Space() {
                                 </Box>
                                 <Box sx={{
                                     p: 0.5,
-                                    height: isXUltraSmallScreen ? '20vh' : 120,
+                                    maxHeight: isXUltraSmallScreen ? '32vh' : 120,
                                     overflowY: 'auto',
                                 }}>
                                     <Typography variant="body2" component="p"
                                         sx={{
                                             p: 0.5,
-                                            bgcolor: 'background.paper'
+                                            bgcolor: 'background.paper',
                                         }}>
                                         {selectedProduct && selectedProduct.explanation}
                                     </Typography>
