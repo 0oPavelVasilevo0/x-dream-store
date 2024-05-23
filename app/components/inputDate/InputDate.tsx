@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -15,25 +15,6 @@ export default function InputDate() {
     const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
     const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'))
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
-
-    // const [startDate, setStartDate] = useState(dayjs(productStore.selectedStartDate));
-    // const [endDate, setEndDate] = useState(dayjs(productStore.selectedEndDate));
-
-    // const handleStartDateChange = (value: dayjs.Dayjs | null) => {
-    //     if (value !== null) {
-    //         const startDateDayjs = dayjs(value);
-    //         setStartDate(startDateDayjs);
-    //         productStore.setSelectedDates(startDateDayjs.format('YYYY-MM-DD'), dayjs(endDate).format('YYYY-MM-DD'));
-    //     }
-    // };
-
-    // const handleEndDateChange = (value: dayjs.Dayjs | null) => {
-    //     if (value !== null) {
-    //         const endDateDayjs = dayjs(value);
-    //         setEndDate(endDateDayjs);
-    //         productStore.setSelectedDates(dayjs(startDate).format('YYYY-MM-DD'), endDateDayjs.format('YYYY-MM-DD'));
-    //     }
-    // };
 
     // Получаем начальные даты из хранилища
     const initialStartDate = dayjs(productStore.selectedStartDate);
@@ -51,7 +32,6 @@ export default function InputDate() {
         };
     }
 
-
     const handleEndDateChange = (value: dayjs.Dayjs | null) => {
         if (value !== null) {
             const endDateDayjs = dayjs(value);
@@ -60,25 +40,14 @@ export default function InputDate() {
         };
     }
 
-
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box sx={{
                 display: 'flex',
-                // color: 'white',
-                // alignItems: 'center',
                   width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
                 justifyContent: 'end',
                 gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : isSmallScreen ? '4ch': '4ch',
             }}>
-                {/* <DemoContainer
-                    sx={{
-                        width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '100%' : isExtraSmallScreen ? '32ch' : isSmallScreen ? '32ch' : '58ch',
-                    }}
-                    components={[
-                        'DatePicker',
-                    ]}
-                > */}
                     <DemoItem label="Start Date"
                     sx={{
                         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : isExtraSmallScreen ? '27ch' : isSmallScreen ? '27ch' : '27ch',
@@ -92,8 +61,6 @@ export default function InputDate() {
                             //     // '& .MuiFormControl-root': {
                             //     //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
                             //     // },
-                            // // width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
-                            // }}
                             slotProps={{ textField: { size: 'small', color: 'warning' } }}
                             value={startDate}
                             onChange={handleStartDateChange}
@@ -119,7 +86,6 @@ export default function InputDate() {
                             onChange={handleEndDateChange}
                         />
                     </DemoItem>
-                {/* </DemoContainer> */}
             </Box>
         </LocalizationProvider>
     );

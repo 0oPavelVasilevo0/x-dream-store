@@ -47,6 +47,7 @@ export default function Images() {
                             alt="img"
                             src={pic}
                             fill
+                            loading='lazy'
                         />
                         {/* )} */}
                     </Box>

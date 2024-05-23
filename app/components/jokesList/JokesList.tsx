@@ -29,14 +29,15 @@ export default function JokesList() {
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
+                        p: 1,
                         width: '100%'
                     }}>
-                        <Typography sx={{ color: 'cyan', fontSize: '30px', }}>
+                        <Typography sx={{ color: 'cyan', fontSize: '30px', textAlign: 'center' }}>
                             <span style={{ color: 'magenta' }}>{'if ( '}</span>
                             {complexData?.jokes[0].setup}
                             <span style={{ color: 'magenta' }}>{' )'}</span>
                         </Typography>
-                        <Typography sx={{ color: 'lightgreen', fontSize: '30px' }}>
+                        <Typography sx={{ color: 'lightgreen', fontSize: '30px', textAlign: 'center' }}>
                             <span style={{ color: 'magenta' }}>{'return ( '}</span>
                             {complexData?.jokes[0].punchline}
                             <span style={{ color: 'magenta' }}>{' )'}</span>

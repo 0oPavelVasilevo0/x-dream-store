@@ -4,7 +4,8 @@ import usePriceData from '@/app/hooks/usePriceData'
 import useProductsData from '@/app/hooks/useProductsData'
 import productStore from '@/app/store/productStore'
 import { customTheme } from '@/app/theme/theme'
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress, Tooltip, Snackbar, SnackbarOrigin, Alert, Skeleton } from '@mui/material'
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress, Tooltip, Snackbar, SnackbarOrigin, Alert, Skeleton, IconButton, Paper } from '@mui/material'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useMediaQuery } from '@mui/system'
 import { observer } from 'mobx-react'
 import { useSession } from 'next-auth/react'
@@ -119,18 +120,22 @@ export default observer(function Space() {
     const LoadedSkeleton = (
         <>
             {Array.from(new Array(loadedCount)).map((_, index) => (
-                <Card key={index} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <Skeleton variant="rectangular" animation="wave" sx={{ bgcolor: 'grey.900' }} height={250} />
+                <Card key={index} component={Paper} elevation={6} sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                }}>
+                    <Skeleton variant="rectangular" animation="wave" height={250} />
                     <CardContent sx={{ p: 1 }}>
-                        <Skeleton variant="text" />
-                        <Skeleton variant="text" />
+                        <Skeleton variant="text" height={49.93} />
+                        <Skeleton variant="text" height={22} />
                     </CardContent>
                     <CardContent sx={{ p: 1 }}>
-                        <Skeleton variant="text" />
-                        <Skeleton variant="text" />
+                        <Skeleton variant="text" height={22} />
+                        {/* <Skeleton variant="text" /> */}
                     </CardContent>
                     <CardActions>
-                        <Skeleton variant="rectangular" height={36} width="100%" />
+                        <Skeleton variant="rounded" height={36} width="100%" />
                     </CardActions>
                 </Card>
             ))
@@ -139,7 +144,7 @@ export default observer(function Space() {
     );
 
     return (
-        <Box sx={{ my: 12, px: isXUltraSmallScreen ? 1 : null }}>
+        <Box sx={{ minHeight: isXUltraSmallScreen ? '690px' : '100vh', py: 12, px: isXUltraSmallScreen ? 1 : null }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -163,7 +168,7 @@ export default observer(function Space() {
                             .filter(product => product.media_type === 'image')// Фильтруем только изображения
                             .slice(0, loadedCount) // Отображаем только загруженное количество объектов
                             .map((product, index) => (
-                                <Card key={index} sx={{
+                                <Card key={index} component={Paper} elevation={6} sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'space-between',
@@ -180,6 +185,7 @@ export default observer(function Space() {
                                                 height="250"
                                                 image={product.url}
                                                 alt={product.title}
+                                                loading='lazy'
                                             />
                                             <CardContent sx={{ p: 1 }}>
                                                 <Typography noWrap gutterBottom variant="h5" component="div">
@@ -247,37 +253,50 @@ export default observer(function Space() {
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         boxShadow: 24,
-                        borderRadius: 2,
-                        width: isExtraSmallScreen ? '95%' : '88ch',
-                        maxHeight: '98%',
+                        width: isExtraSmallScreen ? '100%' : '88ch',
+                        maxHeight: isExtraSmallScreen ? '100vh' : '98%',
                     }}>
-                        <Card>
+                        <Card component={Paper} elevation={6} sx={{
+                            borderRadius: isExtraSmallScreen ? 0 : 2,
+                            height: isXUltraSmallScreen ? '100vh' : null
+                        }}>
                             <CardMedia
                                 component="img"
-                                image={selectedProduct && selectedProduct.url}
+                                image={selectedProduct && selectedProduct.hdurl}
                                 alt={selectedProduct && selectedProduct.title}
                                 sx={{
-                                    maxHeight: '700px',
+                                    maxHeight: isXUltraSmallScreen ? null : '700px',
+                                    height: isXUltraSmallScreen ? '68vh' : null,
+                                    objectFit: 'contain',
                                 }}
                             />
                             <CardContent sx={{
                                 p: 0,
                             }}>
-                                <Typography variant="h6" component="h2" p={1}>
-                                    {selectedProduct && selectedProduct.title}
-                                    <Typography fontSize={12}>
-                                        {selectedProduct && selectedProduct.date}
+                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
+                                    <Typography variant="h6" component="h2" p={1}>
+                                        {selectedProduct && selectedProduct.title}
+                                        <Typography fontSize={12}>
+                                            {selectedProduct && selectedProduct.date}
+                                        </Typography>
                                     </Typography>
-                                </Typography>
-                                <Typography variant="body2" component="p"
-                                    sx={{
-                                        p: 0.5,
-                                        height: 100,
-                                        overflowY: 'auto',
-                                        bgcolor: 'background.paper'
-                                    }}>
-                                    {selectedProduct && selectedProduct.explanation}
-                                </Typography>
+                                    <IconButton color='warning' size='small' onClick={handleClose}>
+                                        <CloseRoundedIcon />
+                                    </IconButton>
+                                </Box>
+                                <Box sx={{
+                                    p: 0.5,
+                                    height: isXUltraSmallScreen ? '20vh' : 120,
+                                    overflowY: 'auto',
+                                }}>
+                                    <Typography variant="body2" component="p"
+                                        sx={{
+                                            p: 0.5,
+                                            bgcolor: 'background.paper'
+                                        }}>
+                                        {selectedProduct && selectedProduct.explanation}
+                                    </Typography>
+                                </Box>
                             </CardContent>
                         </Card>
                     </Box>
