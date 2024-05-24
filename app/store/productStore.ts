@@ -17,6 +17,7 @@ class ProductStore {
             setSelectedProduct: action,
             setselectedBuyInfoProduct: action,
             removeSelectedBuyInfoProduct: action,
+            clearSelectedBuyInfoProduct: action,
             setSelectedDates: action,
             saveToLocalStorage: action,
             loadFromLocalStorage: action,
@@ -42,6 +43,11 @@ class ProductStore {
     removeSelectedBuyInfoProduct(index: number) {
         this.selectedBuyInfoProduct.splice(index, 1);
         this.saveToLocalStorage(); // Save to localStorage when a product is removed
+    }
+
+    clearSelectedBuyInfoProduct() {
+        this.selectedBuyInfoProduct = [];
+        this.saveToLocalStorage();
     }
 
     setSelectedDates(startDate: string, endDate: string) {
