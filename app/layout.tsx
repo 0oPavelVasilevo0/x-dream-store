@@ -7,6 +7,7 @@ import AuthProvider from "@/context/AuthProvider";
 import ThemeContextProvider from "./theme/ThemeContextProvider";
 
 const _NavBar = dynamic(() => import('./components/navbar/NavBar'), { ssr: false })
+const _Footer = dynamic(() => import('./components/footer/Footer'), { ssr: false })
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <Box>
               {children}
             </Box>
+            <_Footer />
           </body>
         </ThemeContextProvider>
       </AuthProvider>
