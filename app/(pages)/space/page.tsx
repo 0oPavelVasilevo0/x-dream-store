@@ -4,18 +4,21 @@ import usePriceData from '@/app/hooks/usePriceData'
 import useProductsData from '@/app/hooks/useProductsData'
 import productStore from '@/app/store/productStore'
 import { customTheme } from '@/app/theme/theme'
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress, Tooltip, Snackbar, SnackbarOrigin, Alert, Skeleton, IconButton, Paper } from '@mui/material'
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, Modal, Box, CircularProgress, Tooltip, Snackbar, SnackbarOrigin, Alert, Skeleton, IconButton, Paper, Fab } from '@mui/material'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useMediaQuery } from '@mui/system'
 import { observer } from 'mobx-react'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
+import ScrollTop from '@/app/components/scrollTop/ScrollTop'
 
 interface StateAlert extends SnackbarOrigin {
     openAlert: boolean;
 }
 
-export default observer(function Space() {
+
+export default observer(function Space(props: any) {
 
     const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
     const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'))
@@ -144,164 +147,186 @@ export default observer(function Space() {
     );
 
     return (
-        <Box sx={{ minHeight: '100vh', py: 12, px: isXUltraSmallScreen ? 1 : null }}>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                mb: 2,
-            }}>
-                <InputDate />
-            </Box>
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch 24ch' : isExtraSmallScreen ? '27ch 27ch' : isSmallScreen ? '27ch 27ch 27ch' : '27ch 27ch 27ch 27ch',
-                    gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : '4ch',
+        <Box id='back-to-top-anchor'>
+            <Box  sx={{ minHeight: '100vh', py: 12, px: isXUltraSmallScreen ? 1 : null }}>
+                <Box sx={{
+                    display: 'flex',
                     justifyContent: 'center',
-                }}
-            >
-                {isLoading ? (
-                    LoadedSkeleton
-                ) : (
-                    <>
-                        {complexData?.products
-                            .filter(product => product.media_type === 'image')// Фильтруем только изображения
-                            .slice(0, loadedCount) // Отображаем только загруженное количество объектов
-                            .map((product, index) => (
-                                <Card key={index} component={Paper} elevation={6} sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'space-between',
-                                }}>
-                                    <Tooltip title='see preview' arrow sx={{ cursor: 'pointer', }}>
-                                        <CardActionArea
-                                            sx={{ borderRadius: 0 }}
-                                            onClick={() => {
-                                                handleOpen(product)
-                                            }}
-                                        >
-                                            <CardMedia
-                                                component="img"
-                                                height="250"
-                                                image={product.url}
-                                                alt={product.title}
-                                                loading='lazy'
-                                            />
-                                            <CardContent sx={{ p: 1 }}>
-                                                <Typography noWrap gutterBottom variant="h5" component="div">
-                                                    {product.title}
-                                                </Typography>
-                                                <Typography noWrap variant="body2" color="text.secondary">
-                                                    {product.explanation}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                    </Tooltip>
-                                    <CardContent sx={{ p: 1 }}>
-                                        <Typography fontSize={10}>
-                                            {product.date}
-                                        </Typography>
-                                        <Typography fontSize={12}>
-                                            {product.url && getPrice(product.url)}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button
-                                            disabled={cheсkLocalProduct(product)}
-                                            fullWidth
-                                            variant='outlined'
-                                            color='warning'
-                                            onClick={() => {
-                                                if (status !== "authenticated") {
-                                                    handleClickAlert({ vertical: 'top', horizontal: 'center' })();
-                                                } else {
-                                                    handleBuyInfo(product);
-                                                }
-                                            }}
-                                        >
-                                            {cheсkLocalProduct(product) ? 'in cart' : 'add to cart'}
-                                        </Button>
-                                        <Snackbar
-                                            anchorOrigin={{ vertical, horizontal }}
-                                            open={openAlert}
-                                            autoHideDuration={6000}
-                                            onClose={handleCloseAlert}
-                                            key={vertical + horizontal}
-                                        >
-                                            <Alert
-                                                severity="error"
-                                                variant="filled"
-                                                sx={{ width: '100%' }}
-                                            >
-                                                To perform actions you need to log in!
-                                            </Alert>
-                                        </Snackbar>
-                                    </CardActions>
-                                </Card>
-                            ))}
-                    </>
-                )}
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
+                    mb: 2,
+                }}>
+                    <InputDate />
+                </Box>
+                <Box 
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch 24ch' : isExtraSmallScreen ? '27ch 27ch' : isSmallScreen ? '27ch 27ch 27ch' : '27ch 27ch 27ch 27ch',
+                        gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : '4ch',
+                        justifyContent: 'center',
+                    }}
                 >
-                    <Box sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        boxShadow: 24,
-                        width: isExtraSmallScreen ? '100%' : '88ch',
-                        maxHeight: isExtraSmallScreen ? '100vh' : '98%',
-                    }}>
-                        <Card component={Paper} elevation={6} sx={{
-                            borderRadius: isExtraSmallScreen ? 0 : 2,
-                           height: isXUltraSmallScreen ? '100vh' : null,
+                    {isLoading ? (
+                        LoadedSkeleton
+                    ) : (
+                        <>
+                            {complexData?.products
+                                .filter(product => product.media_type === 'image')// Фильтруем только изображения
+                                .slice(0, loadedCount) // Отображаем только загруженное количество объектов
+                                .map((product, index) => (
+                                    <Card key={index} component={Paper} elevation={6} sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                    }}>
+                                        <Tooltip title='see preview' arrow sx={{ cursor: 'pointer', }}>
+                                            <CardActionArea
+                                                sx={{ borderRadius: 0 }}
+                                                onClick={() => {
+                                                    handleOpen(product)
+                                                }}
+                                            >
+                                                <CardMedia
+                                                    component="img"
+                                                    height="250"
+                                                    image={product.url}
+                                                    alt={product.title}
+                                                    loading='lazy'
+                                                />
+                                                <CardContent sx={{ p: 1 }}>
+                                                    <Typography noWrap gutterBottom variant="h5" component="div">
+                                                        {product.title}
+                                                    </Typography>
+                                                    <Typography noWrap variant="body2" color="text.secondary">
+                                                        {product.explanation}
+                                                    </Typography>
+                                                </CardContent>
+                                            </CardActionArea>
+                                        </Tooltip>
+                                        <CardContent sx={{ p: 1 }}>
+                                            <Typography fontSize={10}>
+                                                {product.date}
+                                            </Typography>
+                                            <Typography fontSize={12}>
+                                                {product.url && getPrice(product.url)}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button
+                                                disabled={cheсkLocalProduct(product)}
+                                                fullWidth
+                                                variant='outlined'
+                                                color='warning'
+                                                onClick={() => {
+                                                    if (status !== "authenticated") {
+                                                        handleClickAlert({ vertical: 'top', horizontal: 'center' })();
+                                                    } else {
+                                                        handleBuyInfo(product);
+                                                    }
+                                                }}
+                                            >
+                                                {cheсkLocalProduct(product) ? 'in cart' : 'add to cart'}
+                                            </Button>
+                                            <Snackbar
+                                                anchorOrigin={{ vertical, horizontal }}
+                                                open={openAlert}
+                                                autoHideDuration={6000}
+                                                onClose={handleCloseAlert}
+                                                key={vertical + horizontal}
+                                            >
+                                                <Alert
+                                                    severity="error"
+                                                    variant="filled"
+                                                    sx={{ width: '100%' }}
+                                                >
+                                                    To perform actions you need to log in!
+                                                </Alert>
+                                            </Snackbar>
+                                        </CardActions>
+                                    </Card>
+                                ))}
+                        </>
+                    )}
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={{
+                            position: isXUltraSmallScreen ? null : 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: isXUltraSmallScreen ? null : 'translate(-50%, -50%)',
+                            boxShadow: 24,
+                            width: isExtraSmallScreen ? '100%' : '88ch',
+                            maxHeight: isExtraSmallScreen ? '100vh' : '98%',
+                            display: isXUltraSmallScreen ? 'flex' : null,
+                            flexDirection: isXUltraSmallScreen ? 'column' : null,
                         }}>
-                            <CardMedia
-                                component="img"
-                                image={selectedProduct && selectedProduct.hdurl}
-                                alt={selectedProduct && selectedProduct.title}
-                                sx={{
-                                    maxHeight: isXUltraSmallScreen ? '58vh' : '700px',
-                                    //  // height: isXUltraSmallScreen ? '68vh' : null,
-                                    objectFit: 'contain',
-                                }}
-                            />
-                            <CardContent sx={{
-                                p:0,
+                            <Card component={Paper} elevation={6} sx={{
+                                borderRadius: isExtraSmallScreen ? 0 : 2,
+                                height: isXUltraSmallScreen ? '100vh' : null,
+                                maxHeight: isXUltraSmallScreen ? null : '96vh',
+                                overflowY: 'auto',
+                                overFlowX: 'auto',
+                                display: isXUltraSmallScreen ? 'flex' : null,
+                                flexDirection: isXUltraSmallScreen ? 'column' : null,
                             }}>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, alignItems: 'center', p: isXUltraSmallScreen ? '4px 8px' : 1 }}>
-                                    <Typography variant="h6" component="h2" p={1}>
-                                        {selectedProduct && selectedProduct.title}
-                                        <Typography fontSize={12}>
-                                            {selectedProduct && selectedProduct.date}
-                                        </Typography>
-                                    </Typography>
-                                    <IconButton color='warning' size='small' onClick={handleClose}>
-                                        <CloseRoundedIcon />
-                                    </IconButton>
-                                </Box>
-                                <Box sx={{
-                                    p: 0.5,
-                                    maxHeight: isXUltraSmallScreen ? '32vh' : 120,
-                                    overflowY: 'auto',
+                                <CardMedia
+                                    component="img"
+                                    image={selectedProduct && selectedProduct.hdurl}
+                                    alt={selectedProduct && selectedProduct.title}
+                                    sx={{
+                                        // maxHeight: isXUltraSmallScreen ? '58vh' : '680px',
+                                        maxHeight: isXUltraSmallScreen ? '100vh' : '64vh',
+                                        //  // height: isXUltraSmallScreen ? '68vh' : null,
+                                        objectFit: 'contain',
+                                        width: isXUltraSmallScreen ? '100%' : null,
+                                        flexGrow: isXUltraSmallScreen ? 1 : null,
+                                    }}
+                                />
+                                <CardContent sx={{
+                                    p: 0,
+                                    flexGrow: 1,
                                 }}>
-                                    <Typography variant="body2" component="p"
-                                        sx={{
-                                            p: 0.5,
-                                            bgcolor: 'background.paper',
-                                        }}>
-                                        {selectedProduct && selectedProduct.explanation}
-                                    </Typography>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Box>
-                </Modal>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, alignItems: 'center', p: isXUltraSmallScreen ? '4px 8px' : 1 }}>
+                                        <Typography variant="h6" component="h2" p={1}>
+                                            {selectedProduct && selectedProduct.title}
+                                            <Typography fontSize={12}>
+                                                {selectedProduct && selectedProduct.date}
+                                            </Typography>
+                                        </Typography>
+                                        <IconButton color='warning' size='small' onClick={handleClose}>
+                                            <CloseRoundedIcon />
+                                        </IconButton>
+                                    </Box>
+                                    <Box sx={{
+                                        p: 0.5,
+                                        // maxHeight: isXUltraSmallScreen ? '34vh' : 120,
+                                        maxHeight: '100%',
+                                        overflowY: 'auto',
+                                        flexGrow: 1,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}>
+                                        <Typography variant="body2" component="p"
+                                            sx={{
+                                                p: 0.5,
+                                                bgcolor: 'background.paper',
+                                            }}>
+                                            {selectedProduct && selectedProduct.explanation}
+                                        </Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Box>
+                    </Modal>
+                </Box>
             </Box>
+            <ScrollTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUpIcon />
+                </Fab>
+            </ScrollTop>
         </Box>
     )
 }
