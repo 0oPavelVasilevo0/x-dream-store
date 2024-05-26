@@ -44,48 +44,51 @@ export default function InputDate() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box sx={{
                 display: 'flex',
-                  width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
+                width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
                 justifyContent: 'end',
-                gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : isSmallScreen ? '4ch': '4ch',
+                gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : isSmallScreen ? '4ch' : '4ch',
             }}>
-                    <DemoItem label="Start Date"
+                <DemoItem label="Start Date"
                     sx={{
                         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : isExtraSmallScreen ? '27ch' : isSmallScreen ? '27ch' : '27ch',
                     }}
-                    >
-                        <DatePicker
-                            // sx={{
-                            //     '& input': {
-                            //         color: 'white', // Цвет текста в поле ввода
-                            //     },
-                            //     // '& .MuiFormControl-root': {
-                            //     //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
-                            //     // },
-                            slotProps={{ textField: { size: 'small', color: 'warning' } }}
-                            value={startDate}
-                            onChange={handleStartDateChange}
-                        />
-                    </DemoItem>
-                    <DemoItem label="End Date"
+                >
+                    <DatePicker
+                        // sx={{
+                        //     '& input': {
+                        //         color: 'white', // Цвет текста в поле ввода
+                        //     },
+                        //     // '& .MuiFormControl-root': {
+                        //     //     width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '47',
+                        //     // },
+                        slotProps={{ textField: { size: 'small', color: 'warning' } }}
+                        disableFuture={true}
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        maxDate={endDate}
+                    />
+                </DemoItem>
+                <DemoItem label="End Date"
                     sx={{
                         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : isExtraSmallScreen ? '27ch' : isSmallScreen ? '27ch' : '27ch',
                     }}
-                    >
-                        <DatePicker
-                            // sx={{
-                            //     // '& input': {
-                            //     //     color: 'white',
-                            //     // },
-                            //     '& .MuiFormControl-root': {
-                            //         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '27',
-                            //     }
-                            // }}
-                           slotProps={{ textField: { size: 'small', color: 'warning' } }}
-                            disableFuture={true}
-                            value={endDate}
-                            onChange={handleEndDateChange}
-                        />
-                    </DemoItem>
+                >
+                    <DatePicker
+                        // sx={{
+                        //     // '& input': {
+                        //     //     color: 'white',
+                        //     // },
+                        //     '& .MuiFormControl-root': {
+                        //         width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '24ch' : '27',
+                        //     }
+                        // }}
+                        slotProps={{ textField: { size: 'small', color: 'warning' } }}
+                        disableFuture={true}
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        minDate={startDate}
+                    />
+                </DemoItem>
             </Box>
         </LocalizationProvider>
     );
