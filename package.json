@@ -31,6 +31,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-imask": "^7.6.0",
+    "ua-parser-js": "^1.0.37",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^9.0.8",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",

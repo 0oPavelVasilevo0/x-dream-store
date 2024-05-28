@@ -1,11 +1,11 @@
 'use client'
 import * as React from 'react';
-import { styled, alpha, useTheme, ThemeProvider } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import { styled, alpha,} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { AppBar, Avatar, Badge, BadgeProps, Box, Divider, IconButton, InputBase, Menu, MenuItem, Stack, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import { AppBar, Avatar, Badge, BadgeProps, Box, Divider, Fab, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import Button from '@mui/material/Button';
 import { usePathname, useRouter } from 'next/navigation';
 import Link, { NextLinkComposed } from '../link/Link';
@@ -13,8 +13,9 @@ import { customTheme } from '@/app/theme/theme';
 import productStore from '@/app/store/productStore';
 import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
-// import Link from 'next/link';
+import ScrollTop from '../scrollTop/ScrollTop';
+import UserDeviceInfo from '../userDeviceInfo/UserDeviceInfo';
+import UserHistoryInfo from '../userHistoryInfo/UserHistoryInfo';
 
 const pages = [
     { id: 1, name: 'SPACE', path: '/space' },
@@ -62,9 +63,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-//export default observer(function Info() {
 
-export default observer(function NavBar() {
+export default observer(function NavBar(props: any) {
+
+    const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
+    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));
+    const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
+    const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -105,6 +111,7 @@ export default observer(function NavBar() {
         signOut();
     };
 
+
     const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
         '& .MuiBadge-badge': {
             right: -3,
@@ -132,9 +139,25 @@ export default observer(function NavBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={handleLogout}>Sign out</MenuItem>
+            <Box sx={{ minWidth: '24ch', p: 2, display: 'grid', gridTemplateColumns: '100%', gap: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <Typography variant='h6'>
+                        Profile
+                    </Typography>
+                    <IconButton color='warning' size='small' onClick={handleMenuClose}>
+                        <CloseRoundedIcon fontSize='small' />
+                    </IconButton>
+                </Box>
+                <UserDeviceInfo />
+                <UserHistoryInfo />
+            </Box>
+            <Divider flexItem />
+            <MenuItem
+                sx={{ display: 'flex', justifyContent: 'center', color: 'red' }}
+                onClick={handleLogout}
+            >
+                Sign out
+            </MenuItem>
         </Menu>
     );
 
@@ -166,12 +189,10 @@ export default observer(function NavBar() {
                     variant={'text'}
                     sx={{ p: isActive(page.path) ? undefined : '6px 16px', width: '90px', mx: 1 }}
                 >
-                    {/* <Typography textAlign="center"> */}
                     {page.name}
-                    {/* </Typography> */}
                 </Button>
             ))}
-            <Divider sx={{mt: 1}} />
+            <Divider sx={{ mt: 1 }} />
             {status !== "authenticated" ?
                 (
                     <Button
@@ -180,7 +201,6 @@ export default observer(function NavBar() {
                         variant={`${isActive('/login') ? 'outlined' : 'text'}`}
                         to={'/login'}
                         sx={{ width: '90px', mx: 1, mt: 1 }}
-                    // onClick={handleLogin}
                     >
                         Sign in
                     </Button>
@@ -188,45 +208,27 @@ export default observer(function NavBar() {
                 :
                 (
                     <>
-                        <MenuItem disableGutters dense>
-                            <IconButton size="small" aria-label="show orders" color="inherit">
-                                <StyledBadge
-                                    badgeContent={productStore.selectedProductsCount}
-                                    color="success">
-                                    <ShoppingCartIcon />
-                                </StyledBadge>
-                            </IconButton>
-                            <p style={{ marginLeft: '10px' }}>Orders</p>
-                        </MenuItem>
                         <MenuItem
                             dense
                             disableGutters
-                            divider
-                            onClick={handleProfileMenuOpen}>
-                            <IconButton
-                                size="small"
-                                aria-label="account of current user"
-                                aria-controls="primary-search-account-menu"
-                                aria-haspopup="true"
-                                color="inherit"
-                            >
-                                <Avatar
-                                    alt="Profile"
-                                    sizes='small'
-                                    sx={{ width: 32, height: 32 }}
-                                    src={session.user?.image || ''}
-                                />
-                            </IconButton>
+                            // divider
+                            onClick={handleProfileMenuOpen}
+                            sx={{ display: 'flex', justifyContent: 'space-evenly' }}
+                        >
+                            <Avatar
+                                alt="Profile"
+                                sizes='small'
+                                sx={{ width: 32, height: 32 }}
+                                src={session.user?.image || ''}
+                            />
                             <p>Profile</p>
                         </MenuItem>
-                        <MenuItem
-                            dense
-                            disableGutters
-                            color='error'
-                            onClick={handleLogout}
-                            sx={{ justifyContent: 'center', display: 'flex' }}
-                        >
-                                Sign out
+                        <MenuItem disableGutters dense sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <StyledBadge
+                                badgeContent={productStore.selectedProductsCount}
+                                color="success">
+                                <ShoppingCartIcon />
+                            </StyledBadge>
                         </MenuItem>
                     </>
                 )
@@ -234,15 +236,9 @@ export default observer(function NavBar() {
         </Menu>
     );
 
-
-    const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
-    const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));
-    const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
-    const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
-
     return (
 
-        <Box sx={{ flexGrow: 1, }}>
+        <Box id='back-to-top-anchor' sx={{ flexGrow: 1, }}>
 
             <AppBar color='inherit' sx={{
                 // bgcolor: 'black',
@@ -304,7 +300,7 @@ export default observer(function NavBar() {
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{ display: isExtraSmallScreen ? 'none' : 'flex', ml: isExtraSmallScreen ? 'none' : 1, gap: 1 }}>
+                    <Box sx={{ display: isExtraSmallScreen ? 'none' : 'flex', ml: isExtraSmallScreen ? 'none' : 1, gap: 1, alignItems: 'center' }}>
                         {status !== "authenticated" ?
                             (
                                 <Button
@@ -366,6 +362,11 @@ export default observer(function NavBar() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <ScrollTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUpIcon />
+                </Fab>
+            </ScrollTop>
         </Box>
     );
 }
