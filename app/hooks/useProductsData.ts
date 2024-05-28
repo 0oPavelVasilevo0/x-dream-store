@@ -29,9 +29,10 @@ const useProductsData = (startDate: string, endDate: string) => {
             try {
                 setIsLoading(true);//начало загрузки
                 const productsData = await Products(startDate, endDate);
-
+                setError(null);
                 setData({
                     products: productsData,
+                    // products: Array.isArray(productsData) ? productsData : [],
                 });
 
             } catch (error: any) {
