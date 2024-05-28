@@ -7,7 +7,7 @@ export async function Products(startDate: string, endDate: string): Promise<any>
             headers: {
                 'content-type': 'application/json'
             },
-             params: {
+            params: {
                 start_date: startDate,
                 end_date: endDate,
             }
@@ -21,10 +21,12 @@ export async function Products(startDate: string, endDate: string): Promise<any>
 
         const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
         const response = await axios.get(url, config);
+
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching products:', error);
-        throw new Error('Error fetching products');
+        throw error;
+        // throw new Error('Error fetching products');
     }
 }
 
