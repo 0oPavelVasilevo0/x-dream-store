@@ -38,14 +38,12 @@ export default observer(function Orders() {
 
     const handleOpen = (product: any) => {
         console.log('Setting selected product:', product);
-        // productStore.setselectedBuyProduct(product);
         productStore.setSelectedProduct(product);
         setOpen(true);
     };
 
     const handleClose = () => {
         console.log('Closing selected product');
-        // productStore.setselectedBuyProduct(null);
         productStore.setSelectedProduct(null);
         setOpen(false);
     };
@@ -74,7 +72,7 @@ export default observer(function Orders() {
         productStore.clearSelectedBuyInfoProduct();
     };
 
-    const handleOrder = async (session: Session | null) => {
+    const handleOrder = async (session: Session | null, products: any[]) => {
         setIsOrdering(true);
 
         try {
@@ -89,6 +87,10 @@ export default observer(function Orders() {
             });
             console.log(response);
             // Дополнительная логика при успешной отправке письма
+            products.forEach((product: any) => {
+                productStore.setSelectedHistoryInfoProduct(product);
+            });
+            productStore.clearSelectedBuyInfoProduct();
             clearCart()
         } catch (error) {
             console.error(error);
@@ -229,7 +231,6 @@ export default observer(function Orders() {
                                     </Box>
                                     <Box sx={{
                                         p: 0.5,
-                                        // maxHeight: isXUltraSmallScreen ? '34vh' : 120,
                                         maxHeight: '100%',
                                         overflowY: 'auto',
                                         flexGrow: 1,
@@ -249,7 +250,7 @@ export default observer(function Orders() {
                         </Box>
                     </Modal>
                     {selectedBuyInfoProduct.length === 0 ? (
-                        <Box sx={{display: 'flex',flexDirection: 'column', justifyContent: 'flex-start', textAlign: 'center'}}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', textAlign: 'center' }}>
                             <Typography color={'yellow'} fontSize={30}>
                                 Empty
                             </Typography>
@@ -263,7 +264,9 @@ export default observer(function Orders() {
                         }}>
                             <Button
                                 disabled={isOrdering}
-                                onClick={() => handleOrder(session)}
+                                onClick={() => {
+                                    { handleOrder(session, selectedBuyInfoProduct)}
+                                }}
                                 variant='outlined'
                                 sx={{ height: '40px', width: isExtraSmallScreen ? '100%' : '176px' }}>
                                 {isOrdering ? 'Ordering...' : 'Order'}
