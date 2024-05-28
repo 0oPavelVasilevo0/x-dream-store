@@ -5,6 +5,8 @@ class ProductStore {
     selectedProduct: any = null;
     selectedBuyInfoProduct: any[] = [];
 
+    selectedHistoryInfoProduct: any[] = [];
+
     selectedStartDate: string = '';
     selectedEndDate: string = '';
 
@@ -12,11 +14,14 @@ class ProductStore {
         makeObservable(this, {
             selectedProduct: observable,
             selectedBuyInfoProduct: observable,
+            selectedHistoryInfoProduct: observable,
             selectedStartDate: observable,
             selectedEndDate: observable,
             setSelectedProduct: action,
             setselectedBuyInfoProduct: action,
             removeSelectedBuyInfoProduct: action,
+            setSelectedHistoryInfoProduct: action,
+            removeSelectedHistoryInfoProduct: action,
             clearSelectedBuyInfoProduct: action,
             setSelectedDates: action,
             saveToLocalStorage: action,
@@ -26,7 +31,6 @@ class ProductStore {
         const currentDate = dayjs();
         this.selectedStartDate = currentDate.subtract(30, 'day').format('YYYY-MM-DD');
         this.selectedEndDate = currentDate.format('YYYY-MM-DD');
-
         this.loadFromLocalStorage(); // Load from localStorage when the store initializes
         
     }
@@ -50,6 +54,16 @@ class ProductStore {
         this.saveToLocalStorage();
     }
 
+    setSelectedHistoryInfoProduct(product: any) {
+        this.selectedHistoryInfoProduct.push(product);
+        this.saveToLocalStorage(); // Save to localStorage when a product is added
+    }
+
+    removeSelectedHistoryInfoProduct(index: number) {
+        this.selectedHistoryInfoProduct.splice(index, 1);
+        this.saveToLocalStorage(); // Save to localStorage when a product is removed
+    }
+
     setSelectedDates(startDate: string, endDate: string) {
         this.selectedStartDate = startDate;
         this.selectedEndDate = endDate;
@@ -58,6 +72,7 @@ class ProductStore {
 
     saveToLocalStorage() {
         localStorage.setItem('selectedProducts', JSON.stringify(this.selectedBuyInfoProduct));
+        localStorage.setItem('selectedHistoryProducts', JSON.stringify(this.selectedHistoryInfoProduct));
         localStorage.setItem('selectedStartDate', this.selectedStartDate);
         localStorage.setItem('selectedEndDate', this.selectedEndDate);
     }
@@ -65,7 +80,9 @@ class ProductStore {
     loadFromLocalStorage() {
         if (typeof window !== 'undefined') {
             const selectedProducts = JSON.parse(localStorage.getItem('selectedProducts') || '[]');
+            const selectedHistoryProducts = JSON.parse(localStorage.getItem('selectedHistoryProducts') || '[]');
             this.selectedBuyInfoProduct = selectedProducts;
+            this.selectedHistoryInfoProduct = selectedHistoryProducts;
         }
     }
 
