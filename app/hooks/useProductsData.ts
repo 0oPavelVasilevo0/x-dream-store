@@ -26,10 +26,10 @@ const useProductsData = (startDate: string, endDate: string) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);//начало загрузки
+            setError(null);// сбросить ошибку перед новым запросом
             try {
-                setIsLoading(true);//начало загрузки
                 const productsData = await Products(startDate, endDate);
-                setError(null);
                 setData({
                     products: productsData,
                     // products: Array.isArray(productsData) ? productsData : [],
