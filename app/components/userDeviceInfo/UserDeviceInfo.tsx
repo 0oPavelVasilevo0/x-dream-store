@@ -61,12 +61,15 @@ const getPlatform = (userAgent: string): string => {
 export default function UserDeviceInfo() {
     const [deviceInfo, setDeviceInfo] = useState<Partial<DeviceInfoState>>({});
     const [batteryInfo, setBatteryInfo] = useState<Partial<BatteryInfoState>>({});
+    // const [language, setLanguage] = useState<string>('unknown');
 
     const { data: session, status } = useSession()
 
     useEffect(() => {
         const userAgent = navigator.userAgent;
-        const language = navigator.language;
+        const countryLanguage = navigator.language;
+        const language = countryLanguage.split('-')[1]; // Получаем код страны
+       // // setLanguage(countryCode || 'unknown'); // Обновляем состояние с кодом страны
         const platform = getPlatform(userAgent);
 
         const parser = new UAParser();
@@ -295,10 +298,10 @@ export default function UserDeviceInfo() {
 
                         {batteryInfo.charging ? (
                             <Typography fontSize={12}>
-                                {batteryInfo.dischargingTime !== null && batteryInfo.chargingTime !== undefined ? `charging time ${formatTimeInMinutes(batteryInfo.chargingTime)} min` : load}
+                                {batteryInfo.chargingTime !== null && batteryInfo.chargingTime !== undefined ? `charging time ${formatTimeInMinutes(batteryInfo.chargingTime)} min` : (load)}
                             </Typography>
                         ) : (
-                            <Typography fontSize={12} sx={{verticalAlign: 'center'}}>
+                            <Typography fontSize={12} >
                                 {batteryInfo.dischargingTime !== null && batteryInfo.dischargingTime !== undefined ? `battery time ${formatTimeInMinutes(batteryInfo.dischargingTime / 2)} min` : (load)}
                             </Typography>
                         )}
