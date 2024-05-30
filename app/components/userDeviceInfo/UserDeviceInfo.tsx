@@ -7,6 +7,7 @@ import AppleIcon from '@mui/icons-material/Apple';
 import LaptopMacIcon from '@mui/icons-material/LaptopMac';
 import WindowIcon from '@mui/icons-material/Window';
 import AndroidIcon from '@mui/icons-material/Android';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import TabletMacIcon from '@mui/icons-material/TabletMac';
@@ -293,6 +294,7 @@ export default function UserDeviceInfo() {
                     {(deviceInfo.device === 'Apple Macintosh') ? <LaptopMacIcon fontSize='small' /> :
                         (deviceInfo.device === 'Apple iPhone') ? <PhoneIphoneIcon fontSize='small' /> :
                             (deviceInfo.device === 'Apple iPad') ? <TabletMacIcon fontSize='small' /> :
+                                (deviceInfo.platform === 'Android') ? <SmartphoneIcon fontSize='small' /> :
                                 <DevicesIcon fontSize='small' />
                     }
                     {/* <DevicesIcon fontSize='small' /> */}
