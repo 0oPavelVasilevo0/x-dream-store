@@ -70,8 +70,7 @@ export default function UserDeviceInfo() {
     useEffect(() => {
         const userAgent = navigator.userAgent;
         const countryLanguage = navigator.language;
-        const language = countryLanguage.split('-')[1]; // Получаем код страны
-        // // setLanguage(countryCode || 'unknown'); // Обновляем состояние с кодом страны
+        const language = countryLanguage.includes('-') ? countryLanguage.split('-')[1] : countryLanguage; // Получаем код страны
         const platform = getPlatform(userAgent);
         const online = navigator.onLine;
 
@@ -82,8 +81,9 @@ export default function UserDeviceInfo() {
         const browser = `${result.browser.name} ${result.browser.version}`;
         const browserName = `${result.browser.name}`;
         const os = `${result.os.name} ${result.os.version}`;
-        const device = result.device?.model ? `${result.device.vendor} ${result.device.model}` : 'Android Device';
-        const deviceNoname = result.device?.vendor ? `${result.device.vendor}` : 'Android Device';
+        // const device = result.device?.vendor ? `${result.device.vendor} ${result.device.model}` : 'Android Device';
+        const device = (result.device?.vendor !== undefined) ? `${result.device.vendor} ${result.device.model}` : 'Android Device';
+        // const deviceNoname = result.device?.vendor ? `${result.device.vendor}` : 'Android Device';
         //platform
 
 
@@ -92,13 +92,13 @@ export default function UserDeviceInfo() {
             browserName,
             os,
             device,
-            deviceNoname,
+            // deviceNoname,
             userAgent,
             deviceModel,
             language,
             countryLanguage,
             online,
-            platform
+            platform,
         });
 
         // if (navigator.getBattery) {
@@ -196,13 +196,13 @@ export default function UserDeviceInfo() {
         // console.log(userAgent)
         // console.log(platform)
         //  // console.log(setBatteryInfo(batteryInfo))
-        console.log(deviceNoname)
-        console.log(online)
+        // console.log(deviceNoname)
+        // console.log(online)
     }, []);
 
     useEffect(() => {
         if (batteryInfo.level !== undefined) {
-            console.log('Battery Info:', batteryInfo);
+            // console.log('Battery Info:', batteryInfo);
         }
     }, [batteryInfo]);
 
@@ -282,7 +282,7 @@ export default function UserDeviceInfo() {
                     {(deviceInfo.platform === 'MacOS') ? <AppleIcon fontSize='small' /> :
                         (deviceInfo.platform === 'Windows') ? <WindowIcon fontSize='small' /> :
                             (deviceInfo.platform === 'Android') ? <AndroidIcon fontSize='small' /> :
-                                (deviceInfo.platform === 'IOS') ? <AppleIcon fontSize='small' /> :
+                                (deviceInfo.platform === 'iOS') ? <AppleIcon fontSize='small' /> :
                                     <AndroidIcon fontSize='small' />}
                     <Typography fontSize={12}>
                         {deviceInfo.os}
@@ -291,15 +291,15 @@ export default function UserDeviceInfo() {
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {(deviceInfo.device === 'Apple Macintosh') ? <LaptopMacIcon fontSize='small' /> :
-                        (deviceInfo.device === 'Apple IPhone') ? <PhoneIphoneIcon fontSize='small' /> :
-                            (deviceInfo.device === 'Apple IPad') ? <TabletMacIcon fontSize='small' /> :
+                        (deviceInfo.device === 'Apple iPhone') ? <PhoneIphoneIcon fontSize='small' /> :
+                            (deviceInfo.device === 'Apple iPad') ? <TabletMacIcon fontSize='small' /> :
                                 <DevicesIcon fontSize='small' />
                     }
                     {/* <DevicesIcon fontSize='small' /> */}
                     <Typography fontSize={12}>
-                        {(deviceInfo.deviceNoname === undefined) ?
-                            'Android device' :
-                            deviceInfo.device}
+                        {/* {(deviceInfo.deviceNoname === undefined) ?
+                            'Android device' : */}
+                            {deviceInfo.device}
                     </Typography>
                 </Box>
                 {(batteryInfo.level !== undefined && batteryInfo.charging !== undefined) && (
