@@ -29,11 +29,13 @@ interface DeviceInfoState {
     platform: string;
     deviceModel: string;
     language: string;
+    countryLanguage: string;
     browser: string;
     browserName: string;
     os: string;
     device: string;
     deviceNoname: string;
+    online: boolean;
 }
 
 interface BatteryInfoState {
@@ -69,8 +71,9 @@ export default function UserDeviceInfo() {
         const userAgent = navigator.userAgent;
         const countryLanguage = navigator.language;
         const language = countryLanguage.split('-')[1]; // Получаем код страны
-       // // setLanguage(countryCode || 'unknown'); // Обновляем состояние с кодом страны
+        // // setLanguage(countryCode || 'unknown'); // Обновляем состояние с кодом страны
         const platform = getPlatform(userAgent);
+        const online = navigator.onLine;
 
         const parser = new UAParser();
         const result = parser.getResult();
@@ -80,7 +83,9 @@ export default function UserDeviceInfo() {
         const browserName = `${result.browser.name}`;
         const os = `${result.os.name} ${result.os.version}`;
         const device = result.device?.model ? `${result.device.vendor} ${result.device.model}` : 'Android Device';
-        const deviceNoname = result.device?.model ? `${result.device.vendor}` : 'Android Device';
+        const deviceNoname = result.device?.vendor ? `${result.device.vendor}` : 'Android Device';
+        //platform
+
 
         setDeviceInfo({
             browser,
@@ -89,9 +94,11 @@ export default function UserDeviceInfo() {
             device,
             deviceNoname,
             userAgent,
-            platform,
             deviceModel,
             language,
+            countryLanguage,
+            online,
+            platform
         });
 
         // if (navigator.getBattery) {
@@ -190,6 +197,7 @@ export default function UserDeviceInfo() {
         // console.log(platform)
         //  // console.log(setBatteryInfo(batteryInfo))
         console.log(deviceNoname)
+        console.log(online)
     }, []);
 
     useEffect(() => {
@@ -199,9 +207,10 @@ export default function UserDeviceInfo() {
     }, [batteryInfo]);
 
     const load = (
-        <Box sx={{display: 'flex', alignItems: 'center'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+            <Typography fontSize={12}>counting in progress</Typography>
             <CircularProgress size={'16px'} />
-         </Box>
+        </Box>
     )
 
     const formatTimeInMinutes = (time: number | null) => {
@@ -214,8 +223,9 @@ export default function UserDeviceInfo() {
     // Доп цвета для батареи
     const getBatteryColor = (level: number) => {
         if (level > 0.8) return 'success';
-        if (level > 0.3) return 'warning';
-        if (level > 0) return 'error';
+        if (level > 0.5) return 'warning';
+        if (level > 0.2) return 'warning';
+        if (level > 0.0) return 'error';
         return 'error';
     };
 
@@ -226,7 +236,7 @@ export default function UserDeviceInfo() {
         if (level > 0.8) return <BatteryFullIcon fontSize='small' color={getBatteryColor(level)} />;
         if (level > 0.5) return <Battery80Icon fontSize='small' color={getBatteryColor(level)} />;
         if (level > 0.2) return <Battery50Icon fontSize='small' color={getBatteryColor(level)} />;
-        if (level > 0.0) return <Battery20Icon fontSize='small' sx={{ color: getBatteryColor(level) }} />;
+        if (level > 0.0) return <Battery20Icon fontSize='small' color={getBatteryColor(level)} />;
 
         return <BatteryAlertIcon color={getBatteryColor(level)} />;
     };
@@ -239,7 +249,10 @@ export default function UserDeviceInfo() {
                     alt={`${session?.user?.name}`}
                     src={session?.user?.image || ''}
                 />
-                <Typography fontSize={14}>{session?.user?.name}</Typography>
+                <Box>
+                    <Typography fontSize={14}>{session?.user?.name}</Typography>
+                    <Typography fontSize={12} color={deviceInfo.online ? '#00FF7F' : '#FF00FF'}>{deviceInfo.online ? 'online' : 'offline'}</Typography>
+                </Box>
             </Box>
             <Divider flexItem />
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', gap: 1 }} >
@@ -256,7 +269,7 @@ export default function UserDeviceInfo() {
                 {/* <Typography><strong>Device Model:</strong> {deviceInfo.deviceModel}</Typography> */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <LanguageIcon fontSize='small' />
-                    <Typography fontSize={12}>{deviceInfo.language}</Typography>
+                    <Typography fontSize={12}>{(deviceInfo.language === "") ? deviceInfo.countryLanguage : deviceInfo.language}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {(deviceInfo.browserName === 'Chrome') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><FaChrome /></Box> :
@@ -278,36 +291,39 @@ export default function UserDeviceInfo() {
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {(deviceInfo.device === 'Apple Macintosh') ? <LaptopMacIcon fontSize='small' /> :
-                        (deviceInfo.device === 'Apple Iphone') ? <PhoneIphoneIcon fontSize='small' /> :
-                            (deviceInfo.device === 'Apple Ipad') ? <TabletMacIcon fontSize='small' /> :
-                            <DevicesIcon fontSize='small' />
+                        (deviceInfo.device === 'Apple IPhone') ? <PhoneIphoneIcon fontSize='small' /> :
+                            (deviceInfo.device === 'Apple IPad') ? <TabletMacIcon fontSize='small' /> :
+                                <DevicesIcon fontSize='small' />
                     }
                     {/* <DevicesIcon fontSize='small' /> */}
                     <Typography fontSize={12}>
-                        {(deviceInfo.deviceNoname == undefined) ?
+                        {(deviceInfo.deviceNoname === undefined) ?
                             'Android device' :
                             deviceInfo.device}
                     </Typography>
                 </Box>
-                <Typography fontSize={14} sx={{ textAlign: 'right' }}>Battery Info</Typography>
-                {(batteryInfo.level !== undefined && batteryInfo.charging !== undefined) ? (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {/* {batteryInfo.charging ? <BatteryChargingFullIcon /> : <BatteryFullIcon />} */}
-                        {getBatteryIcon(batteryInfo.level, batteryInfo.charging)}
-                        <Typography fontSize={12}>{(batteryInfo.level * 100).toFixed(0)}%</Typography>
+                {(batteryInfo.level !== undefined && batteryInfo.charging !== undefined) && (
+                    <>
+                        <Typography fontSize={14} sx={{ textAlign: 'right' }}>Battery Info</Typography>
+                        {/* {(batteryInfo.level !== undefined && batteryInfo.charging !== undefined) ? ( */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {/* {batteryInfo.charging ? <BatteryChargingFullIcon /> : <BatteryFullIcon />} */}
+                            {getBatteryIcon(batteryInfo.level, batteryInfo.charging)}
+                            <Typography fontSize={12}>{(batteryInfo.level * 100).toFixed(0)}%</Typography>
 
-                        {batteryInfo.charging ? (
-                            <Typography fontSize={12}>
-                                {batteryInfo.chargingTime !== null && batteryInfo.chargingTime !== undefined ? `charging time ${formatTimeInMinutes(batteryInfo.chargingTime)} min` : (load)}
-                            </Typography>
-                        ) : (
-                            <Typography fontSize={12} >
-                                {batteryInfo.dischargingTime !== null && batteryInfo.dischargingTime !== undefined ? `battery time ${formatTimeInMinutes(batteryInfo.dischargingTime / 2)} min` : (load)}
-                            </Typography>
-                        )}
-                    </Box>
-                ) : (
-                    <Typography>Battery information is not available.</Typography>
+                            {batteryInfo.charging ? (
+                                <Typography fontSize={12}>
+                                    {batteryInfo.chargingTime !== null && batteryInfo.chargingTime !== undefined ? `charging time ${formatTimeInMinutes(batteryInfo.chargingTime)} min` : (load)}
+                                </Typography>
+                            ) : (
+                                <Typography fontSize={12} >
+                                    {batteryInfo.dischargingTime !== null && batteryInfo.dischargingTime !== undefined ? `battery time ${formatTimeInMinutes(batteryInfo.dischargingTime)} min` : (load)}
+                                </Typography>
+                            )}
+                        </Box>
+                        {/* ) : (
+                     <Typography>Battery information is not available.</Typography> */}
+                    </>
                 )}
             </Box>
         </>
