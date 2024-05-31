@@ -1,13 +1,29 @@
 import productStore from '@/app/store/productStore'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Divider, IconButton, MenuItem, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, MenuItem, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { observer } from 'mobx-react';
+import ModalWindow from '../modalWindow/ModalWindow';
 
 export default observer(function UserHistoryInfo() {
+
     const history = productStore.selectedHistoryInfoProduct
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = (product: any) => {
+        console.log('Setting selected product:', product);
+        productStore.setSelectedProduct(product);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        console.log('Closing selected product');
+        productStore.setSelectedProduct(null);
+        setOpen(false);
+    };
 
     const handleDelete = (index: number) => {
         productStore.removeSelectedHistoryInfoProduct(index);
@@ -29,7 +45,11 @@ export default observer(function UserHistoryInfo() {
                         {history && history.map((product: any, index: number) => (
                             <Box key={index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
-                                    <MenuItem sx={{ width: '80%', gap: 1, p: 0.5 }}>
+                                    <MenuItem sx={{ width: '80%', gap: 1, p: 0.5 }}
+                                        onClick={() => {
+                                            handleOpen(product)
+                                        }}
+                                    >
                                         <Image
                                             alt="img"
                                             src={product.url}
@@ -54,6 +74,7 @@ export default observer(function UserHistoryInfo() {
                                 </Box>
                             </Box>
                         ))}
+                        <ModalWindow open={open} handleClose={handleClose} />
                     </>
                 </AccordionDetails>
             </Accordion>
