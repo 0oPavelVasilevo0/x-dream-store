@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Paper, TextField, Typography } from "@mui/material";
 import Link, { NextLinkComposed } from "@/app/components/link/Link";
 
 export default function CreateAccount() {
@@ -44,33 +44,31 @@ export default function CreateAccount() {
             minHeight: '460px'
         }}
         >
-            <Box sx={{
-                width: '36ch',
+            <Box component={Paper} elevation={6} sx={{
+                width: '34ch',
                 alignItems: 'center',
                 textAlign: 'center',
-                // background: '#D9D9D9',
-                // p: 1,
-                // borderRadius: 1,
-                // boxShadow: '0px 0px 20px -8px',
+                p: 1,
+
             }}>
-                <Box sx={{ mt: 1 }}>
+                <Box sx={{ bgcolor: error ? 'red' : null, borderRadius: error ? 0.5 : null }}>
                     {(error === "") ? (
-                        <Typography variant="h6" fontSize={24} sx={{ color: 'cyan' }} >
+                        <Typography variant="h6" fontSize={22} sx={{ color: 'cyan' }} >
                             Create Aсcount
                         </Typography>
                     ) : (
-                        <Typography sx={{ color: 'red' }}>
+                        <Typography variant="h6" fontSize={22} sx={{ color: 'white' }}>
                             {error}
                         </Typography>)}
                 </Box>
                 <Divider />
-                <Typography >
+                <Typography fontSize={14} >
                     Do you have an account?{" "}
                     <Link
                         href="/login"
                         underline="none"
                         activeClassName="false"
-                        sx={{ color: 'cyan' }}
+                        sx={{ color: 'cyan', fontSize: 16 }}
                     >
                         Log in
                     </Link>
@@ -87,7 +85,7 @@ export default function CreateAccount() {
                         onChange={(e) => setName(e.target.value)}
                         required
                         autoComplete="off"
-                        sx={{ mt: 5 }}
+                        sx={{ mt: 4 }}
                     />
                     <TextField
                         fullWidth
@@ -100,7 +98,7 @@ export default function CreateAccount() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         autoComplete="off"
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 2 }}
                     />
                     <TextField
                         fullWidth
@@ -113,7 +111,7 @@ export default function CreateAccount() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         autoComplete="off"
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 2 }}
                     />
                     <Button
                         fullWidth

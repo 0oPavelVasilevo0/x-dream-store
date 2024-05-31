@@ -2,7 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Box, Button, CircularProgress, Divider, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Paper, TextField, Typography } from "@mui/material";
 import Link from "@/app/components/link/Link";
 import SvgGoogle from "@/app/components/svg/google/SvgGoogle";
 import SvgGithub from "@/app/components/svg/github/SvgGithub";
@@ -10,8 +10,6 @@ import SvgGithub from "@/app/components/svg/github/SvgGithub";
 export default function Login() {
     const { status } = useSession();
     const router = useRouter();
-
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -47,34 +45,32 @@ export default function Login() {
                 </Box>
             ) : (
                 <>
-                    <Box sx={{
-                        width: '36ch',
+                    <Box component={Paper} elevation={6} sx={{
+                        width: '34ch',
                         alignItems: 'center',
                         textAlign: 'center',
-                        // bgcolor: '#121212',
-                        // bgcolor: 'inherit',
-                        // boxShadow: '0px 0px 20px -8px',
-                        // p:2,
-                        // borderRadius: 1,
+                        p:1,
+                        // border: 0.5,
+                        // borderRadius: 1
                     }}>
-                        <Box>
+                            <Box sx={{ bgcolor: error ? 'red' : null, borderRadius: error ? 0.5 : null }}>
                             {(error === "") ? (
-                                <Typography variant="h6" fontSize={24} sx={{ color: 'cyan' }} >
+                                <Typography variant="h6" fontSize={22} sx={{ color: 'cyan' }} >
                                     Log in to your account
                                 </Typography>
                             ) : (
-                                <Typography sx={{ color: 'red' }}>
+                                        <Typography variant="h6" fontSize={22} sx={{ color: 'white' }}>
                                     {error}
                                 </Typography>)}
                         </Box>
                         <Divider />
-                        <Typography >
+                            <Typography fontSize={14} >
                             Don&apos;t have an account?{" "}
                             <Link
                                 href="/create_account"
                                 underline="none"
                                 activeClassName="false"
-                                sx={{ color: 'cyan' }}
+                                sx={{ color: 'cyan', fontSize: 16 }}
                             >
                                 Sign up
                             </Link>
@@ -83,9 +79,8 @@ export default function Login() {
                             fullWidth
                             onClick={() => signIn("google")}
                             variant="contained"
-                            // color="info"
                             color="inherit"
-                            sx={{ mt: 5 }}
+                            sx={{ mt: 4 }}
                             startIcon={<SvgGoogle />}
                         >
                             <Typography ml={4} textTransform={'none'}>
@@ -96,7 +91,6 @@ export default function Login() {
                             fullWidth
                             onClick={() => signIn("github")}
                             variant="contained"
-                            // color="info"
                             color="inherit"
                             sx={{ mt: 2 }}
                             startIcon={<SvgGithub />}
@@ -143,7 +137,6 @@ export default function Login() {
                                 variant="contained"
                                 color="warning"
                                 sx={{
-                                    // background: '#222222',
                                     mt: 3
                                 }}
                             >
