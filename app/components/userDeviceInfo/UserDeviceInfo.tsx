@@ -247,21 +247,21 @@ export default function UserDeviceInfo() {
         //charging
         if (charging === true) {
             if (level <= 1) return <BatteryChargingFullIcon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.95) return <BatteryCharging90Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.8) return <BatteryCharging80Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.6) return <BatteryCharging60Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.5) return <BatteryCharging50Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.3) return <BatteryCharging30Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level < 0.2) return <BatteryCharging20Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.95) return <BatteryCharging90Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.8) return <BatteryCharging80Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.6) return <BatteryCharging60Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.5) return <BatteryCharging50Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.3) return <BatteryCharging30Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level <= 0.2) return <BatteryCharging20Icon fontSize='small' color={getBatteryColor(level)} />;
             return <BatteryCharging20Icon fontSize='small' color={getBatteryColor(level)} />;
         } else {
             if (level >= 0.95) return <BatteryFullIcon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.9) return <Battery90Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.8) return <Battery80Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.6) return <Battery60Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.5) return <Battery50Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.3) return <Battery30Icon fontSize='small' color={getBatteryColor(level)} />;
-            if (level > 0.2) return <Battery20Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.9) return <Battery90Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.8) return <Battery80Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.6) return <Battery60Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.5) return <Battery50Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.3) return <Battery30Icon fontSize='small' color={getBatteryColor(level)} />;
+            if (level >= 0.2) return <Battery20Icon fontSize='small' color={getBatteryColor(level)} />;
             return <BatteryAlertIcon fontSize='small' color={getBatteryColor(level)} />;
         }
     };
@@ -315,16 +315,14 @@ export default function UserDeviceInfo() {
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {(deviceInfo.device === 'Apple Macintosh' || deviceInfo.platform === 'MacOS') ? <LaptopMacIcon fontSize='small' /> :
-                        (deviceInfo.device === 'Apple iPhone' || deviceInfo.platform === 'iOS') ? <PhoneIphoneIcon fontSize='small' /> :
-                            (deviceInfo.device === 'Apple iPad' || deviceInfo.platform === 'iOS') ? <TabletMacIcon fontSize='small' /> :
-                                (deviceInfo.device === undefined || deviceInfo.platform === 'Android') ? <SmartphoneIcon fontSize='small' /> :
-                                    <DevicesIcon fontSize='small' />
+                    {
+                        (deviceInfo.device === 'Apple Macintosh') ? <LaptopMacIcon fontSize='small' /> :
+                            (deviceInfo.device === 'Apple iPhone' ) ? <PhoneIphoneIcon fontSize='small' /> :
+                                (deviceInfo.device === 'Apple iPad' ) ? <TabletMacIcon fontSize='small' /> :
+                                    (deviceInfo.device === 'Android Device' ) ? <SmartphoneIcon fontSize='small' /> :
+                                        <DevicesIcon fontSize='small' />
                     }
-                    {/* <DevicesIcon fontSize='small' /> */}
                     <Typography fontSize={12}>
-                        {/* {(deviceInfo.deviceNoname === undefined) ?
-                            'Android device' : */}
                         {deviceInfo.device}
                     </Typography>
                 </Box>
@@ -337,7 +335,7 @@ export default function UserDeviceInfo() {
                             {getBatteryIcon(batteryInfo.level, batteryInfo.charging)}
                             <Typography fontSize={12}>{(batteryInfo.level * 100).toFixed(0)}%</Typography>
                             {batteryInfo.charging ? (
-                               (batteryInfo.level >= 1) ? (
+                                (batteryInfo.level >= 1) ? (
                                     <Typography fontSize={12}>
                                         battery full
                                     </Typography>
