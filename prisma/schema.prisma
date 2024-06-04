@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model VerificationCode {
+  id        String   @id @default(cuid()) @map("_id")
+  email     String   @unique
+  code      String
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
 model Account {
   id                 String  @id @default(cuid()) @map("_id")
   userId             String  @map("user_id")
@@ -52,6 +60,8 @@ model User {
   password      String?
   accounts      Account[]
   sessions      Session[]
+  cartItems     CartItem[]    // Добавляем обратную связь для CartItem
+  orderHistories OrderHistory[]  // Добавляем обратную связь для OrderHistory
  
   @@map("users")
 }
@@ -63,4 +73,21 @@ model VerificationToken {
  
   @@unique([identifier, token])
   @@map("verificationtokens")
+}
+
+model CartItem {
+  id        String   @id @default(cuid()) @map("_id")
+  userId    String   @map("user_id")
+  productId String
+  quantity  Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OrderHistory {
+  id        String   @id @default(cuid()) @map("_id")
+  userId    String   @map("user_id")
+  productId String
+  quantity  Int
+  orderDate DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
