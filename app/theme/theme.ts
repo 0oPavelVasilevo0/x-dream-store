@@ -44,7 +44,7 @@ export const customColorTheme = createTheme(
             error: red,
             warning: lime,
             background: {
-                default: '#3e3c46',
+                default: '#2a292d',
                 //   paper: '#2F4F4F'
                  },
             text: {

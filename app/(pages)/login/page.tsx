@@ -49,22 +49,25 @@ export default function Login() {
                         width: '34ch',
                         alignItems: 'center',
                         textAlign: 'center',
-                        p:1,
-                        // border: 0.5,
-                        // borderRadius: 1
+                        p: 1,
                     }}>
-                            <Box sx={{ bgcolor: error ? 'red' : null, borderRadius: error ? 0.5 : null }}>
+                        <Box sx={{ bgcolor: error ? 'red' : null, borderRadius: error ? 1 : null, padding: error ? '6px 16px' : null }}>
                             {(error === "") ? (
-                                <Typography variant="h6" fontSize={22} sx={{ color: 'cyan' }} >
-                                    Log in to your account
-                                </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', }}>
+                                    <Typography variant="button" fontSize={20} sx={{ color: 'cyan' }} >
+                                        log in
+                                    </Typography>
+                                        <Typography variant="button" fontSize={12} >
+                                        to your account
+                                    </Typography>
+                                </Box>
                             ) : (
-                                        <Typography variant="h6" fontSize={22} sx={{ color: 'white' }}>
+                                        <Typography variant="button" fontSize={14} sx={{ color: 'white' }}>
                                     {error}
                                 </Typography>)}
                         </Box>
-                        <Divider />
-                            <Typography fontSize={14} >
+                            <Divider sx={{ display: error ? 'none' : null }} />
+                            <Typography variant="button" fontSize={12} >
                             Don&apos;t have an account?{" "}
                             <Link
                                 href="/create_account"
@@ -72,7 +75,7 @@ export default function Login() {
                                 activeClassName="false"
                                 sx={{ color: 'cyan', fontSize: 16 }}
                             >
-                                Sign up
+                                SIGN UP
                             </Link>
                         </Typography>
                         <Button

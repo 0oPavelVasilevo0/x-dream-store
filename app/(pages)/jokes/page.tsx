@@ -2,6 +2,7 @@
 import useJokesData from '@/app/hooks/useJokesData'
 import { customTheme } from '@/app/theme/theme'
 import { Box, CircularProgress, Paper, Typography, useMediaQuery } from '@mui/material'
+import { useSession } from 'next-auth/react'
 
 export default function Jokes() {
   const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'))
@@ -9,8 +10,10 @@ export default function Jokes() {
   const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'))
   const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'))
 
+  const { data: session, status } = useSession()
+
   const complexData = useJokesData()
-  if (complexData === null) {
+  if ((complexData === null) && (status === 'loading')) {
     return <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
     }}>
@@ -23,12 +26,11 @@ export default function Jokes() {
       gridTemplateColumns: isXUltraSmallScreen ? undefined : isUltraSmallScreen ? '24ch 24ch' : isExtraSmallScreen ? '27ch 27ch' : isSmallScreen ? '27ch 27ch 27ch' : '27ch 27ch 27ch 27ch',
       gap: isUltraSmallScreen ? '1ch' : isExtraSmallScreen ? '2ch' : '4ch',
       justifyContent: isSmallScreen ? 'center' : 'center',
-      mb: 2,
-      mt: 12,
-      p: isXUltraSmallScreen ? '0 12px' : null
+      px: isXUltraSmallScreen ? 1 : null,
+      py: 12,
     }}
     >
-      {complexData.jokes.map((jokes, index) => (
+      {complexData?.jokes.map((jokes, index) => (
         <Paper key={index} elevation={6} sx={{
           display: 'flex',
           flexDirection: 'column',

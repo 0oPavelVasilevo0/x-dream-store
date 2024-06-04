@@ -9,7 +9,6 @@ export default function Footer() {
     const isUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('sm'));
     const isXUltraSmallScreen = useMediaQuery(customTheme.breakpoints.down('xs'));
     return (
-        // <Box sx={{ flexGrow: 1, }}>
         <AppBar position="static" color="primary" sx={{ top: 'auto', bottom: 0, alignItems: isXUltraSmallScreen ? undefined : 'center' }}>
             <Toolbar sx={{
                 width: isXUltraSmallScreen ? '100%' : isUltraSmallScreen ? '49ch' : isExtraSmallScreen ? '56ch' : isSmallScreen ? '89ch' : '120ch',
@@ -18,9 +17,9 @@ export default function Footer() {
                 flexDirection: 'row',
                 justifyContent: isXUltraSmallScreen ? 'center' : 'space-between',
                 alignItems: 'start',
-                py: 1
+                p: 1
             }}>
-                <Box sx={{ width: isXUltraSmallScreen ? '48%' : null}}>
+                <Box sx={{ width: isXUltraSmallScreen ? '48%' : null }}>
                     <Box sx={{ p: 1 }}>
                         <Typography>API</Typography>
                     </Box>
@@ -60,12 +59,12 @@ export default function Footer() {
                         </MenuItem>
                     </MenuList>
                 </Box>
-                <Divider orientation='vertical' flexItem sx={{ display: isXUltraSmallScreen ? null : 'none'}} />
+                <Divider orientation='vertical' flexItem sx={{ display: isXUltraSmallScreen ? null : 'none' }} />
                 <Box sx={{ width: isXUltraSmallScreen ? '48%' : null }}>
                     <Box sx={{ p: 1 }}>
                         <Typography>Source</Typography>
                     </Box>
-                    <MenuList dense sx={{ display: 'flex', flexDirection: isExtraSmallScreen? 'column' : 'row', color: 'cornflowerblue' }}>
+                    <MenuList dense sx={{ display: 'flex', flexDirection: isExtraSmallScreen ? 'column' : 'row', color: 'cornflowerblue' }}>
                         <MenuItem >
                             <Link
                                 underline="none"
@@ -92,6 +91,5 @@ export default function Footer() {
                 </Box>
             </Toolbar>
         </AppBar>
-        // </Box>
     )
 }

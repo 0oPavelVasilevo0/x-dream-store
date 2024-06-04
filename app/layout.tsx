@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import dynamic from 'next/dynamic'
 import { Box, CssBaseline } from "@mui/material";
 import AuthProvider from "@/context/AuthProvider";
