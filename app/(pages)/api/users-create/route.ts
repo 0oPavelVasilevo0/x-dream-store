@@ -3,7 +3,7 @@ import { getUserByEmail } from '@/app/utils/user';
 import { sendVerificationEmail } from '@/app/utils/email-verif';
 import { generateVerificationCode } from '@/app/utils/code-verif';
 import prisma from '@/lib/prisma'; // Import Prisma client
-import { verifyEmailAddress } from "@/app/utils/email-check";
+// import { verifyEmailAddress } from "@/app/utils/email-check";
 
 export const POST = async (req: NextRequest) => {
     try {
