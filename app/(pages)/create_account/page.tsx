@@ -33,18 +33,17 @@ export default function CreateAccount() {
                 const currentTime = new Date().getTime();
                 const remainingTime = Math.floor((expirationTime - currentTime) / 1000);
                 setCountdown(remainingTime);
-                setTimeout(() => {
-                    setStep(2);
-                    setSuccessMessage('');
-                }, 5000); // Show message for 5 seconds before switching steps
+                // setTimeout(() => {
+                //     setStep(2);
+                //     setSuccessMessage('');
+                // }, 5000); // Show message for 5 seconds before switching steps
             } else {
                 // Обработка ошибки
                 setError(response.data.message);
             }
         } catch (error: any) {
-            setError(error.response?.data?.message || 'An error occurred');
-        }
-        finally {
+            setError(error.response.data.message);
+        } finally {
             setIsSending(false);
         }
     };
@@ -65,12 +64,12 @@ export default function CreateAccount() {
             if (response.status === 201) {
                 // Обработка успешного ответа
                 setSuccessMessage(response.data.message);
-                setTimeout(() => {
-                    router.push('/login');
-                }, 5000);
+                // setTimeout(() => {
+                //     router.push('/login');
+                // }, 5000);
             } else {
                 // Обработка ошибки
-                setError(response.data.message);
+                setError(response.data.message || 'Failed to create user.');
             }
         } catch (error: any) {
             setError(error.response?.data?.message);
@@ -98,13 +97,33 @@ export default function CreateAccount() {
         return () => clearInterval(timer);
     }, [countdown]);
 
+    const nextStep = () => {
+        if (step === 1) {
+            setStep(2);
+            setSuccessMessage('');
+        } else if (step === 2) {
+            router.push('/login');
+        }
+    };
+
     const TimerCode = (
         <>
-            {step === 2 && countdown > 0 && (
+            {countdown > 0 && (
                 <>
-                    <Typography sx={{ mt: 3 }} >
+                    <Typography sx={{ mt: 2 }} >
                         code expires in<span style={{ color: 'red', fontSize: 18, fontWeight: 'bold' }}> {Math.floor(countdown / 60)}:{('0' + (countdown % 60)).slice(-2)}</span>
                     </Typography>
+                    <Typography
+                        component={Button}
+                        sx={{ color: 'cyan', fontSize: 12 }}
+                        onClick={() => { setStep(1) }}
+                    >
+                        return to enter email
+                    </Typography>
+                    <Typography fontSize={12} sx={{ color: 'cornflowerblue' }}>
+                        didn't receive the code? check the entered email address
+                    </Typography>
+                    
                 </>
             )}
         </>
@@ -241,7 +260,10 @@ export default function CreateAccount() {
                         )}
                     </>
                 ) : (
-                    <Box sx={{ borderRadius: 1, border: 1, borderColor: 'yellow', mt: 4, padding: '6px 16px' }}>
+                    <Box sx={{ mt: 2 }}>
+                        <>
+                            {step === 1 && countdown > 0 && (TimerCode)}
+                        </>
                         <Typography
                             variant="button"
                             fontSize={14}
@@ -249,6 +271,15 @@ export default function CreateAccount() {
                         >
                             {successMessage}
                         </Typography>
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            color='warning'
+                            sx={{ mt: 1 }}
+                            onClick={nextStep}
+                        >
+                            Next
+                        </Button>
                     </Box>
                 )}
             </Box>
