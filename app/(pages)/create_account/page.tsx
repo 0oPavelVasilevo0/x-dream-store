@@ -121,7 +121,7 @@ export default function CreateAccount() {
                         return to enter email
                     </Typography>
                     <Typography fontSize={12} sx={{ color: 'cornflowerblue' }}>
-                        didn't receive the code? check the entered email address
+                        didn&apos;t receive the code? check the entered email address{" "}
                     </Typography>
                     
                 </>
