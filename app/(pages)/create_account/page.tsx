@@ -27,7 +27,6 @@ export default function CreateAccount() {
             console.log(response.data);
             if (response.status === 200) {
                 // Обработка успешного ответа
-                // Display the message
                 setSuccessMessage(response.data.message);
                 const expirationTime = new Date(response.data.expiresAt).getTime();
                 const currentTime = new Date().getTime();
