@@ -40,10 +40,10 @@ export async function postHandler(req: Request): Promise<{ success: boolean; mes
         const mailContentHTML = render(MailContent(products));
         // Опции отправки письма
         const mailOptions = {
-            from: Mail,
+            from: `info-bot <${Mail}>`,
             to: userEmail,
             subject: 'Your Order',
-            // html: htmlContent,
+            // text: 'This is an automated email - please do not reply!',
             html: mailContentHTML,
         };
 

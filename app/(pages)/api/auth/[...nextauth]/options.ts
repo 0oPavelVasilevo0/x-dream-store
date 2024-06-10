@@ -1,11 +1,8 @@
-// import GoogleProvider from "next-auth/providers/google";
-// import GitHubProvider from "next-auth/providers/github";
-// import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from 'bcryptjs';
 import { SessionOptions } from "next-auth";
-// import { SessionStrategy } from "next-auth";
+
 const GoogleProvider = require("next-auth/providers/google").default;
 const GitHubProvider = require("next-auth/providers/github").default;
 const CredentialsProvider = require("next-auth/providers/credentials").default;
@@ -15,15 +12,7 @@ interface Credentials {
     password: string;
 }
 
-// type AuthProvider = ReturnType<typeof GoogleProvider> | ReturnType<typeof GitHubProvider> | ReturnType<typeof CredentialsProvider>;
-
 export const options = {
-// export const options: {
-//     adapter: any; // Присваивает тип вашего адаптера
-//     providers: AuthProvider[]; // Замените any на тип ваших провайдеров
-//     session: SessionStrategy; // Указывает тип для сессии
-//     pages: { signIn: string };
-// } = {
     adapter: PrismaAdapter(prisma) as any,
     providers: [
         GoogleProvider({
@@ -50,12 +39,6 @@ export const options = {
             },
             async authorize(credentials: Credentials) {
                 const { email, password } = credentials;
-                // const user = {
-                //     id: "39",
-                //     name: "Pipin",
-                //     email: "pipin@examle.com",
-                //     password: "12345"
-                // }
 
                 //chek in db
                 const user = await prisma.user.findUnique({
@@ -67,7 +50,6 @@ export const options = {
 
                 if (!user) return null;//доподнительная проверка
 
-                // const hashedPassword =  user?.password;
                 const hashedPassword = (user as unknown as { password: string }).password;
                 // Compare the plain-text password with the hashed password
                 const passwordMatch = await bcrypt.compare(password, hashedPassword);
