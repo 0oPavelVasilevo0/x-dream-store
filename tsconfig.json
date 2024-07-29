@@ -36,7 +36,7 @@
     "app/utils/user.ts",
     "context/AuthProvider.tsx",
     "app/(pages)/api/mailRoute/mailData.ts"
-  ],
+, "app/(pages)/api/users-order/users-order.js", "app/(pages)/api/users-history/users-history.js"  ],
   "exclude": [
     "node_modules"
   ]

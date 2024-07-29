@@ -13,7 +13,7 @@ export default function Jokes() {
   const { data: session, status } = useSession()
 
   const complexData = useJokesData()
-  if ((complexData === null) && (status === 'loading')) {
+  if ((complexData === null) || (status === 'loading')) {
     return <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
     }}>

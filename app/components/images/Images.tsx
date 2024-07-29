@@ -7,13 +7,18 @@ import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { customTheme } from '@/app/theme/theme';
+// import { ProductsCount } from '@/app/(pages)/api/productsRoute/productsData';
+// import useSWR from 'swr'
 
+// const fetcher = (count: number) => ProductsCount(count)
 
 export default function Images() {
     const { data: session, status } = useSession()
     const count = 30
     const countData = useProductsCount(count)
     const pic = countData?.products.filter((product: { media_type: string; }) => product.media_type === 'image')[0]?.url
+
+    // const { data, error } = useSWR([count], fetcher);
 
     const isSmallScreen = useMediaQuery(customTheme.breakpoints.down('lg'));
     const isExtraSmallScreen = useMediaQuery(customTheme.breakpoints.down('md'));

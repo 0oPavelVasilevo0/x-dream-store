@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Avatar, Box, CircularProgress, Divider, Typography } from '@mui/material'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { Avatar, Box, Button, CircularProgress, Divider, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField, Typography } from '@mui/material'
 import LanguageIcon from '@mui/icons-material/Language'
 import DevicesIcon from '@mui/icons-material/Devices';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
@@ -31,6 +31,10 @@ import Battery80Icon from '@mui/icons-material/Battery80';
 import Battery90Icon from '@mui/icons-material/Battery90';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import BatteryAlertIcon from '@mui/icons-material/BatteryAlert';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { MdClose, MdDone } from 'react-icons/md';
 import UAParser from 'ua-parser-js'
 import { useSession } from 'next-auth/react';
 
@@ -74,8 +78,68 @@ export default function UserDeviceInfo() {
     const [deviceInfo, setDeviceInfo] = useState<Partial<DeviceInfoState>>({});
     const [batteryInfo, setBatteryInfo] = useState<Partial<BatteryInfoState>>({});
     // const [language, setLanguage] = useState<string>('unknown');
+    const [step, setStep] = useState(1)
 
     const { data: session, status } = useSession()
+    // Создаем ссылку на элемент input
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [preview, setPreview] = useState<string | null>(null);// предварительный просмотр
+    const [fixFile, setFixFile] = useState(1)
+    const [changeName, setChangeName] = useState<string>('');// смена имени
+    const [isNameDone, setIsNameDone] = useState<boolean>(false);
+    // Функция для программного клика по скрытому input
+    const handleButtonClick = () => {
+        fileInputRef.current?.click();
+    };
+    // Обработчик события изменения файла
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            // Создаем URL для предварительного просмотра изображения
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+
+            // добавить логику для загрузки изображения на сервер здесь
+            console.log(file.name);
+        } else {
+            console.error('Выбранный файл не является изображением');
+        }
+    };
+
+    //изменение имени
+    const handleDoneClick = () => {
+        setChangeName(changeName);
+        setIsNameDone(true);
+
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChangeName(event.target.value);
+        setIsNameDone(false);
+    };
+    // Обработчик для сброса изменений
+    const handleCancelClick = () => {
+        setChangeName('');
+        // setIsNameDone(true);
+    };
+
+    // Функция для сброса всех состояний к исходным значениям
+    const handleResetAll = () => {
+        // setStep(1);
+        setPreview(null);
+        setFixFile(1);
+        setChangeName('');
+        setIsNameDone(false);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'p' || event.key === 'P') {
+            event.stopPropagation(); // Предотвращение распространения события
+        }
+    };
 
     useEffect(() => {
         const userAgent = navigator.userAgent;
@@ -96,7 +160,6 @@ export default function UserDeviceInfo() {
         // const deviceNoname = result.device?.vendor ? `${result.device.vendor}` : 'Android Device';
         //platform
 
-
         setDeviceInfo({
             browser,
             browserName,
@@ -111,40 +174,9 @@ export default function UserDeviceInfo() {
             platform,
         });
 
-        // if (navigator.getBattery) {
-        //     navigator.getBattery().then(battery => {
-        //         setBatteryInfo({
-        //             charging: battery.charging,
-        //             level: battery.level,
-        //         });
-
-        //         battery.addEventListener('chargingchange', () => {
-        //             setBatteryInfo(prevState => ({
-        //                 ...prevState,
-        //                 charging: battery.charging,
-        //             }));
-        //         });
-
-        //         battery.addEventListener('levelchange', () => {
-        //             setBatteryInfo(prevState => ({
-        //                 ...prevState,
-        //                 level: battery.level,
-        //             }));
-        //         });
-        //     });
-        // }
-
-
-
         if (navigator.getBattery) {
             navigator.getBattery().then(battery => {
                 const updateBatteryInfo = () => {
-                    // console.log('Battery Info:', {
-                    //     charging: battery.charging,
-                    //     level: battery.level,
-                    //     dischargingTime: battery.dischargingTime,
-                    //     chargingTime: battery.chargingTime,
-                    // });
                     setBatteryInfo({
                         charging: battery.charging,
                         level: battery.level,
@@ -159,37 +191,6 @@ export default function UserDeviceInfo() {
                 battery.addEventListener('levelchange', updateBatteryInfo);
                 battery.addEventListener('dischargingtimechange', updateBatteryInfo);
                 battery.addEventListener('chargingtimechange', updateBatteryInfo);
-
-                // if (navigator.getBattery) {
-                //     const updateBatteryInfo = (battery: BatteryManager) => {
-                //         console.log('Battery Info:', {
-                //             charging: battery.charging,
-                //             level: battery.level,
-                //             dischargingTime: battery.dischargingTime,
-                //             chargingTime: battery.chargingTime,
-                //         });
-
-                //         setBatteryInfo({
-                //             charging: battery.charging,
-                //             level: battery.level,
-                //             dischargingTime: battery.dischargingTime === Infinity ? null : battery.dischargingTime,
-                //             chargingTime: battery.chargingTime === Infinity ? null : battery.chargingTime,
-                //         });
-                //     };
-
-                //     navigator.getBattery().then(battery => {
-                //         updateBatteryInfo(battery);
-
-                //         battery.addEventListener('chargingchange', () => updateBatteryInfo(battery));
-                //         battery.addEventListener('levelchange', () => updateBatteryInfo(battery));
-                //         battery.addEventListener('dischargingtimechange', () => updateBatteryInfo(battery));
-                //         battery.addEventListener('chargingtimechange', () => updateBatteryInfo(battery));
-
-                //         // Установим интервал для регулярного опроса состояния батареи
-                //         const intervalId = setInterval(() => updateBatteryInfo(battery), 1000); // Опрос каждую минуту
-
-                //         // Очистка интервала при размонтировании компонента
-                //         return () => clearInterval(intervalId);
 
             }).catch(error => {
                 console.error('Failed to get battery information:', error);
@@ -266,40 +267,178 @@ export default function UserDeviceInfo() {
         }
     };
 
+    const EditProfile = (
+        <>
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 0.5, justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>Edit Profile</Typography>
+                    {(fixFile !== 1 || isNameDone === true) && (
+                        <Typography color='cyan'>save?</Typography>
+                    )}
+                </Box>
+                {(fixFile !== 1 || isNameDone === true) && (
+                    <Box sx={{ alignContent: 'center', flexDirection: 'row', display: 'flex' }}>
+                        <IconButton
+                            onClick={handleResetAll}
+                        >
+                            <MdClose cursor='pointer' size={22} fill='coral' />
+                        </IconButton>
+                        <IconButton onClick={() => setStep(1)}  >
+                            <MdDone cursor='pointer' size={22} fill='limeGreen' />
+                        </IconButton>
+                    </Box>
+                )}
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 0.5, justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Avatar
+                            alt={`${session?.user?.name}`}
+                            src={session?.user?.image || ''}
+                        />
+                        <Box sx={{ textAlign: 'center' }}>
+                            {fixFile === 1 ? (
+                                <>
+                                    <Typography fontSize={12}>
+                                        click to change
+                                    </Typography>
+                                    <Typography fontSize={12}>
+                                        max 0.5MB!
+                                    </Typography>
+                                </>
+                            ) : (
+                                <Typography fontSize={12} color='yellow'>
+                                    change to
+                                </Typography>
+                            )}
+                        </Box>
+                        <ChevronRightIcon />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <IconButton sx={{
+                            border: preview ? 1 : null,
+                            '&.Mui-disabled': {
+                                borderColor: 'cyan', // Цвет границы в заблокированном состоянии
+                            }
+                        }}
+                            disabled={fixFile !== 1 ? true : false} size='small' onClick={handleButtonClick}>
+                            {preview ? (
+                                <Avatar alt="Preview" src={preview || ''} />
+                            ) : (
+                                <AccountCircleIcon sx={{ fontSize: '40px' }} />
+                            )
+                            }
+                        </IconButton>
+
+                    </Box>
+                    {preview && (
+                        <>
+                            <Box sx={{ alignContent: 'center', flexDirection: 'row', display: 'flex' }}>
+                                <IconButton disabled={fixFile !== 1 ? true : false} onClick={() => setFixFile(2)} >
+                                    <MdDone cursor='pointer' size={22} fill='limeGreen' />
+                                </IconButton>
+                                {fixFile === 1 && (
+                                    <IconButton onClick={() => setPreview(null)} >
+                                        <MdClose cursor='pointer' size={22} fill='coral' />
+                                    </IconButton>
+                                )}
+                            </Box>
+                        </>
+                    )}
+                </Box>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1 }}>
+                    <Box sx={{ width: '100%' }}>
+                        <Typography gutterBottom>
+                            {session?.user?.name}
+                        </Typography>
+                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, alignItems: 'center' }}>
+                            <TextField
+                                fullWidth
+                                variant={!isNameDone ? 'standard' : 'outlined'}
+                                size='small'
+                                type='text'
+                                label={!isNameDone ? 'enter new name' : 'new name'}
+                                placeholder='new name'
+                                value={changeName}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                autoComplete='off'
+                                // color='warning'
+                                disabled={isNameDone}
+                                margin='dense'
+                                sx={{
+                                    '& .MuiInputBase-input.Mui-disabled': {
+                                        // Цвет текста в заблокированном состоянии
+                                        WebkitTextFillColor: 'white'
+                                    },
+                                    '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: 'cyan', // Цвет границы в заблокированном состоянии
+                                    },
+                                    '& .MuiInputLabel-root.Mui-disabled': {
+                                        color: 'yellow', // Цвет метки в заблокированном состоянии
+                                    },
+                                }}
+
+                            />
+                            {changeName !== '' && (
+                                <>
+                                    <Box sx={{ alignContent: 'center', flexDirection: 'row', display: 'flex' }}>
+                                        <IconButton disabled={isNameDone} onClick={handleDoneClick} >
+                                            <MdDone cursor='pointer' size={22} fill='limeGreen' />
+                                        </IconButton>
+                                        {isNameDone === false && (
+                                            <IconButton onClick={handleCancelClick} >
+                                                <MdClose cursor='pointer' size={22} fill='coral' />
+                                            </IconButton>
+                                        )}
+                                    </Box>
+                                </>
+                            )}
+                        </Box>
+                    </Box>
+
+                </Box>
+            </Box>
+        </>
+    )
+
     return (
         <>
             <Divider flexItem />
-            <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center', gap: 2 }}>
-                <Avatar
-                    alt={`${session?.user?.name}`}
-                    src={session?.user?.image || ''}
-                />
-                <Box>
-                    <Typography fontSize={14}>{session?.user?.name}</Typography>
-                    <Typography fontSize={12} color={deviceInfo.online ? '#00FF7F' : '#FF00FF'}>{deviceInfo.online ? 'online' : 'offline'}</Typography>
-                </Box>
-            </Box>
+            {(step === 1) && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Avatar
+                            alt={`${session?.user?.name}`}
+                            src={session?.user?.image || ''}
+                        />
+                        <Box>
+                            <Typography fontSize={14}>{session?.user?.name}</Typography>
+                            <Typography fontSize={12} color={deviceInfo.online ? '#00FF7F' : '#FF00FF'}>{deviceInfo.online ? 'online' : 'offline'}</Typography>
+                        </Box>
+                    </Box>
+                    <Box>
+                        <IconButton onClick={() => setStep(2)} >
+                            <ManageAccountsIcon />
+                        </IconButton>
+                    </Box>
+                </Box>)}
+            {(step === 2) && (EditProfile)}
             <Divider flexItem />
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', gap: 1 }} >
                 <Typography fontSize={14} sx={{ textAlign: 'right' }}>Device Info</Typography>
-                {/* <Typography><strong>User Agent:</strong> {deviceInfo.userAgent}</Typography> */}
-                {/* <Typography>
-                    {(deviceInfo.platform === 'MacOS') ? <AppleIcon fontSize='small' /> :
-                        (deviceInfo.platform === 'Windows') ? <WindowIcon fontSize='small' /> :
-                            (deviceInfo.platform === 'Android') ? <AndroidIcon fontSize='small' /> :
-                                (deviceInfo.platform === 'IOS') ? <AppleIcon fontSize='small' /> :
-                                    <DisplaySettingsIcon fontSize='small' />}
-                    {deviceInfo.platform}
-                </Typography> */}
-                {/* <Typography><strong>Device Model:</strong> {deviceInfo.deviceModel}</Typography> */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <LanguageIcon fontSize='small' />
                     <Typography fontSize={12}>{(deviceInfo.language === "") ? deviceInfo.countryLanguage : deviceInfo.language}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {(deviceInfo.browserName === 'Chrome') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><FaChrome /></Box> :
-                        (deviceInfo.browserName === 'Safari') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><ImSafari fontSize='small' /></Box> :
-                            (deviceInfo.browserName === 'Opera') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><FaOpera fontSize='small' /></Box> :
+                        (deviceInfo.browserName === 'Safari') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><ImSafari /></Box> :
+                            (deviceInfo.browserName === 'Opera') ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 20, height: 20 }}><FaOpera /></Box> :
                                 <TravelExploreIcon fontSize='small' />}
                     <Typography fontSize={12}>{deviceInfo.browser}</Typography>
                 </Box>
@@ -311,15 +450,14 @@ export default function UserDeviceInfo() {
                                     <AndroidIcon fontSize='small' />}
                     <Typography fontSize={12}>
                         {deviceInfo.os}
-                        {/* {deviceInfo.platform} */}
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {
                         (deviceInfo.device === 'Apple Macintosh') ? <LaptopMacIcon fontSize='small' /> :
-                            (deviceInfo.device === 'Apple iPhone' ) ? <PhoneIphoneIcon fontSize='small' /> :
-                                (deviceInfo.device === 'Apple iPad' ) ? <TabletMacIcon fontSize='small' /> :
-                                    (deviceInfo.device === 'Android Device' ) ? <SmartphoneIcon fontSize='small' /> :
+                            (deviceInfo.device === 'Apple iPhone') ? <PhoneIphoneIcon fontSize='small' /> :
+                                (deviceInfo.device === 'Apple iPad') ? <TabletMacIcon fontSize='small' /> :
+                                    (deviceInfo.device === 'Android Device') ? <SmartphoneIcon fontSize='small' /> :
                                         <DevicesIcon fontSize='small' />
                     }
                     <Typography fontSize={12}>
@@ -350,8 +488,6 @@ export default function UserDeviceInfo() {
                                 </Typography>
                             )}
                         </Box>
-                        {/* ) : (
-                     <Typography>Battery information is not available.</Typography> */}
                     </>
                 )}
             </Box>

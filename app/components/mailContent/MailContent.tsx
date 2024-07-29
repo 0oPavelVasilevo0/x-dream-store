@@ -1,10 +1,13 @@
 import React from 'react';
-import { Html, Container, Img, Heading, Button } from '@react-email/components'
+import { Html, Container, Img, Heading, Button, Head } from '@react-email/components'
 
 export function MailContent(products: any[]) {
 
     return (
         <Html lang='en'>
+            <Head>
+                <title>Your Order. This is an automated email - please do not reply!</title>
+            </Head>
             <Container style={{
                 maxWidth: '400px',
                 display: 'flex',
@@ -12,7 +15,7 @@ export function MailContent(products: any[]) {
                 alignItems: 'center',
             }}>
                 <Container style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Heading as='h2' style={{ color: '#3e3c46' }} >Your Order</Heading>
+                    {/* <Heading as='h2' style={{ color: '#3e3c46' }} >Your Order</Heading> */}
                     {products.map((product) => (
                         <Container style={{ marginTop: '6px', borderRadius: '6px', backgroundColor: '#3e3c46' }} key={product.url}>
                             <Img src={product.url} alt={product.title} width="100%" height="auto" style={{ borderRadius: '6px 6px 0 0' }} />

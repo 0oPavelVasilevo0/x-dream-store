@@ -26,11 +26,11 @@ export default function RootLayout({
         <ThemeContextProvider>
           <CssBaseline />
           <body>
-            <_NavBar />
             <Box>
+            <_NavBar />
               {children}
-            </Box>
             <_Footer />
+            </Box>
           </body>
         </ThemeContextProvider>
       </AuthProvider>
